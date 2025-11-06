@@ -71,7 +71,14 @@ export const Pitch = ({
 
     }
 
-    setAllOvers([...allOvers, _overRuns]);
+    const eachOver = {
+      playerOne: _playerOne,
+      playerTwo: _playerTwo,
+      bowler: _bowler,
+      overRuns: _overRuns,
+    };
+
+    setAllOvers([...allOvers, eachOver]);
 
     setOverRuns([]);
     setBowler({});

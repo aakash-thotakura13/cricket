@@ -15,4 +15,13 @@ button {
   padding: 0.5em 1em;
   border-radius: 50px;
 }
- 
+
+hr {
+  padding: 0em;
+  margin: 0em;
+}
+
+p {
+  padding:  0em;
+  margin: 0.25em 0em;
+}

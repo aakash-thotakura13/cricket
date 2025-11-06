@@ -87,7 +87,7 @@ export const SelectTeam = () => {
                   setBowlingCard={setInningsOneBowlingScoreCard}
                   partnerShipData={_inningsOnePartnershipCard}
                   setPartnershipData={setInningsOnePartnershipCard}
-                  allOvers={_inningsOneAllOvers}
+                  allOvers={_inningsOneAllovers}
                   setAllOvers={setInningsOneAllOvers}
                 />
                 : <Pitch
@@ -101,7 +101,7 @@ export const SelectTeam = () => {
                   setBowlingCard={setInningsTwoBowlingScoreCard}
                   partnerShipData={_inningsTwoPartnershipCard}
                   setPartnershipData={setInningsTwoPartnershipCard}
-                  allOvers={_inningsTwoAllOvers}
+                  allOvers={_inningsTwoAllovers}
                   setAllOvers={setInningsTwoAllOvers}
                 />
             }
