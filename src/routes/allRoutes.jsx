@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router";
 import App from "../App";
 import { SelectTeam } from "../pages/SelectTeams";
 import { ScoreCard } from "../pages/ScoreCard";
+import { OverDetails } from "../pages/OverDetails";
+
 
 export const allRoutes = createBrowserRouter([
   {
@@ -22,7 +24,7 @@ export const allRoutes = createBrowserRouter([
       },
       {
         path: "/overs",
-        element: <>Overs</>
+        element: <OverDetails />
       },
       {
         path: "/graphs",
