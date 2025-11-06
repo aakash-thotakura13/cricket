@@ -66,7 +66,7 @@ export const ScoreCard = () => {
               const remainingBalls = ballsDelivered - (oversCount * 6);
               const runsConceded = addRuns(player.runs);
               const wickets = player.runs.filter(run => typeof run === "string").length;
-              const economy = runsConceded / oversCount;
+              const economy = (runsConceded / oversCount).toFixed(2);
 
               return (
                 <div key={id} style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr", fontSize: "0.9em", borderBottom:"1px solid whitesmoke", }}>
