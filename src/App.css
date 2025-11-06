@@ -5,3 +5,14 @@
   text-align: center;
   border: 1px solid #ccc;
 }
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: large;
+  border: 1px solid #ccc;
+  padding: 0.5em 1em;
+  border-radius: 50px;
+}
+ 

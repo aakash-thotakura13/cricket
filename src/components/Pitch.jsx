@@ -1,0 +1,348 @@
+
+import { useAtom } from "jotai";
+
+import { bowler, onStrike, overRuns, partnerOne, partnerTwo, playerOne, playerTwo, prevBowler, run, } from "../jotai/atom";
+import { ScoreBar } from "./ScoreBar";
+
+import addRuns from "../function/addRuns"
+import { addBatsman, addBowler } from "../function/addPlayers";
+import generateRuns from "../function/generateRuns";
+import { useEffect } from "react";
+import wicketsCounter from "../function/wicketsCounter";
+
+
+export const Pitch = ({
+  battingTeam, setBattingTeam,
+  bowlingTeam, setBowlingTeam,
+  battingCard, setBattingCard,
+  bowlingCard, setBowlingCard,
+  partnershipData, setpartnershipData
+}) => {
+
+  const [_playerOne, setPlayerOne] = useAtom(playerOne);
+  const [_playerTwo, setPlayerTwo] = useAtom(playerTwo);
+
+  const [_partnerOne, setPartnerOne] = useAtom(partnerOne);
+  const [_partnerTwo, setPartnerTwo] = useAtom(partnerTwo);
+
+  const [_bowler, setBowler] = useAtom(bowler);
+  const [_prevBowler, setPrevBowler] = useAtom(prevBowler);
+
+  const [_run, setRun] = useAtom(run);
+  const [_overRuns, setOverRuns] = useAtom(overRuns);
+  const [_onStrike, setOnStrike] = useAtom(onStrike);
+
+
+  useEffect(() => {
+
+    if (_overRuns.length > 5 && _overRuns.length === 6) {
+
+      overUp();
+
+    };
+
+  }, [_playerOne, _playerTwo, _bowler, _onStrike, overUp]);
+
+
+
+  function overUp() {
+
+    const findBowlerId = bowlingCard.findIndex(bowler => bowler.playerName === _bowler.playerName);
+
+    if (findBowlerId === -1) {
+
+      const bowlerEntry = {
+        ..._bowler,
+        overDetails: [_overRuns],
+      }
+
+      setBowlingCard([...bowlingCard, bowlerEntry]);
+
+    } else {
+
+      const bowlerEntry = {
+        ..._bowler,
+        overDetails: [..._bowler.overDetails, _overRuns,],
+      }
+
+      const updatedArray = bowlingCard.map((bowler, index) => index === findBowlerId ? bowlerEntry : bowler);
+      setBowlingCard(updatedArray);
+
+    }
+
+    setOverRuns([]);
+    setBowler({});
+    setPrevBowler(_bowler);
+
+  };
+
+
+  function game() {
+
+    if (Object.keys(_bowler).length === 0) {
+      alert(`Select a bowler`);
+      return;
+    }
+
+    const run = generateRuns();
+    setRun(run);
+    setOverRuns([..._overRuns, run]);
+
+    setBowler({ ..._bowler, runs: [..._bowler.runs, run] });
+
+    if (run % 2 !== 0) {
+      setOnStrike(!_onStrike);
+    }
+
+    if (typeof run === "string") {
+
+      if (_onStrike) {
+
+        let runs = [..._playerOne.runs, run];
+        let totalRuns = addRuns(runs);
+        let totalDeliveries = runs.length;
+        let strikeRate = (totalRuns * 100 / totalDeliveries).toFixed(2);
+
+        const playerEntry = {
+          playerName: _playerOne.playerName,
+          runs,
+          totalRuns,
+          totalDeliveries,
+          strikeRate,
+          fours: _playerOne.runs.filter(run => run === 4).length,
+          sixes: _playerOne.runs.filter(run => run === 6).length
+        };
+
+        setBattingCard([...battingCard, playerEntry]);
+
+        let partnershipRuns = [..._playerOne.runs, run, ..._playerTwo.runs];
+        let partnershipTotalRuns = addRuns(partnershipRuns);
+        let partnershipTotalDeliveries = partnershipRuns.length;
+        let partnershipStrikeRate = (partnershipTotalRuns * 100 / partnershipTotalDeliveries).toFixed(2);
+
+        const partnershipEntry = {
+          player1: _playerOne.playerName,
+          player2: _playerTwo.playerName,
+          runs: partnershipRuns,
+          totalRuns: partnershipTotalRuns,
+          strikeRate: partnershipStrikeRate,
+          ballsFaced: partnershipTotalDeliveries,
+          fours: [..._playerOne.runs, run, ..._playerTwo.runs].filter(run => run === 4).length,
+          sixes: [..._playerOne.runs, run, ..._playerTwo.runs].filter(run => run === 6).length
+        };
+
+        setpartnershipData([...partnershipData, partnershipEntry]);
+
+        setPlayerOne({});
+        setPartnerOne({});
+        setPartnerTwo({ playerName: _partnerTwo.playerName, runs: [] });
+
+      } else {
+
+        let runs = [..._playerTwo.runs, run];
+        let totalRuns = addRuns(runs);
+        let totalDeliveries = runs.length;
+        let strikeRate = (totalRuns * 100 / totalDeliveries).toFixed(2);
+
+        const playerEntry = {
+          playerName: _playerTwo.playerName,
+          runs,
+          totalRuns,
+          totalDeliveries,
+          strikeRate,
+          fours: _playerTwo.runs.filter(run => run === 4).length,
+          sixes: _playerTwo.runs.filter(run => run === 6).length
+        };
+
+        setBattingCard([...battingCard, playerEntry]);
+
+        let partnershipRuns = [..._playerTwo.runs, run, ..._playerTwo.runs];
+        let partnershipTotalRuns = addRuns(partnershipRuns);
+        let partnershipTotalDeliveries = partnershipRuns.length;
+        let partnershipStrikeRate = (partnershipTotalRuns * 100 / partnershipTotalDeliveries).toFixed(2);
+
+        const partnershipEntry = {
+          player1: _playerTwo.playerName,
+          player2: _playerOne.playerName,
+          runs: partnershipRuns,
+          totalRuns: partnershipTotalRuns,
+          strikeRate: partnershipStrikeRate,
+          ballsFaced: partnershipTotalDeliveries,
+          fours: [..._playerOne.runs, run, ..._playerTwo.runs].filter(run => run === 4).length,
+          sixes: [..._playerOne.runs, run, ..._playerTwo.runs].filter(run => run === 6).length,
+        };
+
+        setpartnershipData([...partnershipData, partnershipEntry]);
+
+        setPlayerTwo({});
+        setPartnerOne({ playerName: _partnerOne.playerName, runs: [] });
+        setPartnerTwo({});
+
+      }
+    } else {
+
+      if (_onStrike) {
+
+        let runs = [..._playerOne.runs, run];
+        let totalRuns = addRuns(runs);
+        let totalDeliveries = runs.length;
+        let strikeRate = (totalRuns * 100 / totalDeliveries).toFixed(2);
+
+        const playerEntry = {
+          playerName: _playerOne.playerName,
+          runs,
+          totalRuns,
+          totalDeliveries,
+          strikeRate,
+          fours: _playerOne.runs.filter(run => run === 4).length,
+          sixes: _playerOne.runs.filter(run => run === 6).length
+        };
+
+        const findPlayer = battingCard.findIndex(player => player.playerName === _playerOne.playerName);
+
+        const updatedArray = battingCard.map((player, index) => index === findPlayer ? playerEntry : player);
+        setBattingCard(updatedArray);
+
+        setPlayerOne(playerEntry);
+        setPartnerOne(playerEntry);
+
+      } else {
+
+        let runs = [..._playerTwo.runs, run];
+        let totalRuns = addRuns(runs);
+        let totalDeliveries = runs.length;
+        let strikeRate = (totalRuns * 100 / totalDeliveries).toFixed(2);
+
+        const playerEntry = {
+          playerName: _playerTwo.playerName,
+          runs,
+          totalRuns,
+          totalDeliveries,
+          strikeRate,
+          fours: _playerTwo.runs.filter(run => run === 4).length,
+          sixes: _playerTwo.runs.filter(run => run === 6).length
+        };
+
+        const findPlayer = battingCard.findIndex(player => player.playerName === _playerTwo.playerName);
+
+        const updatedArray = battingCard.map((player, index) => index === findPlayer ? playerEntry : player);
+        setBattingCard(updatedArray);
+
+        setPlayerTwo(playerEntry);
+        setPartnerTwo(playerEntry);
+      }
+    }
+  };
+
+  console.clear()
+  console.log(...battingCard)
+
+
+  return (
+    <>
+      <h1>Pitch</h1>
+
+      <ScoreBar team={battingTeam} />
+
+      <div>
+        {
+          Object.keys(_playerOne).length > 0 && Object.keys(_playerTwo).length > 0
+            ? <div onClick={() => game()} style={{ width: "350px", margin: "0em auto 1em", aspectRatio: "1.35/1", backgroundColor: "green", borderRadius: "45%", display: "flex", flexDirection: "column", justifyContent: "space-between", }}>
+
+              <p>
+                {
+                  _onStrike
+                    ? <>
+                      <span>{_playerOne.playerName}</span> <br /> <span>{addRuns(_playerOne?.runs)} ({_playerOne?.runs?.length})</span>
+                    </>
+                    : <>
+                      <span>{_playerTwo.playerName}</span> <br /> <span>{addRuns(_playerTwo?.runs)} ({_playerTwo?.runs?.length})</span>
+                    </>
+                }
+              </p>
+
+              <div>
+                <p style={{ fontSize: "2.7em", margin: "0em", padding: "0em", }}>{_run}</p>
+                <hr style={{ width: "80%" }} />
+                {_overRuns?.map((run, id) => <span key={id}>{run}, </span>)}
+              </div>
+
+              <p>
+                {
+                  _onStrike
+                    ? <>
+                      <span>{_playerTwo.playerName}</span> <br /> <span>{addRuns(_playerTwo?.runs)} ({_playerTwo?.runs?.length})</span>
+                    </>
+                    : <>
+                      <span>{_playerOne.playerName}</span> <br /> <span>{addRuns(_playerOne?.runs)} ({_playerOne?.runs?.length})</span>
+                    </>
+                }
+              </p>
+
+            </div>
+            : <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.25em", fontSize: "0.85em" }}>
+              {
+                battingTeam.teamMembers.map((player, id) => {
+                  return (
+                    <li
+                      key={id}
+                      style={{
+                        backgroundColor: player === _playerOne.playerName || player === _playerTwo.playerName ? "grey" : "",
+                        border: "2px solid #ccc",
+                        borderRadius: "1em",
+                        cursor: "pointer",
+                        padding: "0.25em 0.5em",
+                        textAlign: "left",
+                      }}
+                      onClick={() => addBatsman(player, _playerOne, setPlayerOne, _playerTwo, setPlayerTwo, setPartnerOne, setPartnerTwo, battingCard, setBattingCard)}
+                    >
+                      {player}
+                    </li>
+                  )
+                })
+              }
+            </div>
+        }
+      </div>
+
+
+      <br />
+
+
+      <div>
+        {
+          Object.keys(_bowler).length > 0
+            ?
+            <p style={{ display: "flex", justifyContent: "space-between" }}>
+              <span>{_bowler.playerName}</span>
+              <span>{addRuns(_bowler?.runs)} / {wicketsCounter(_bowler?.runs)}</span>
+            </p>
+            :
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.25em", fontSize: "0.85em" }}>
+              {
+                bowlingTeam.teamMembers.map((player, id) => {
+                  return (
+                    <li
+                      key={id}
+                      style={{
+                        backgroundColor: player === _bowler.playerName || player === _prevBowler.playerName ? "grey" : "",
+                        border: "2px solid #ccc",
+                        borderRadius: "1em",
+                        cursor: "pointer",
+                        padding: "0.25em 0.5em",
+                        textAlign: "left",
+                      }}
+                      onClick={() => addBowler(player, bowlingCard, setBowler,)}
+                    >
+                      {player}
+                    </li>
+                  )
+                })
+              }
+            </div>
+        }
+      </div>
+
+    </>
+  )
+}

@@ -1,0 +1,90 @@
+import { useAtom } from "jotai"
+import { inningsOneBattingScoreCard, inningsOneBowlingScoreCard } from "../jotai/atom"
+import addRuns from "../function/addRuns";
+
+
+export const ScoreCard = () => {
+
+  const [_inningsOneBattingScoreCard, setInningsOneBattingScoreCard] = useAtom(inningsOneBattingScoreCard);
+  const [_inningsOneBowlingScoreCard, setInningsOneBowlingScoreCard] = useAtom(inningsOneBowlingScoreCard);
+
+  console.clear();
+  console.table(_inningsOneBattingScoreCard);
+  console.table(_inningsOneBowlingScoreCard);
+
+  return (
+    <div>
+      <h1>Scorecard</h1>
+
+      <details>
+
+        <summary style={{ cursor: "pointer", listStyle: "none", textAlign: "left", fontSize: "1.5em", backgroundColor: "grey", padding: "0.35em 0.7em", borderRadius: "1em", fontWeight: "bold", }}>Innings One</summary>
+
+        <h2 style={{ textAlignLast: "left" }}>Batting Scorecard</h2>
+
+        <div style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", fontSize: "0.9em", borderBottom:"3px solid whitesmoke", }}>
+          <span style={{ margin: "2px 0px", textAlign: "left" }}>Player</span>
+          <span style={{ margin: "2px 0px", }}>Runs</span>
+          <span style={{ margin: "2px 0px", }}>4s</span>
+          <span style={{ margin: "2px 0px", }}>6s</span>
+          <span style={{ margin: "2px 0px", }}>SR</span>
+        </div>
+
+        <div>
+          {
+            _inningsOneBattingScoreCard?.map((player, id) =>
+              <div key={id} style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", fontSize: "0.9em", borderBottom:"1px solid whitesmoke", }}>
+                <span style={{ margin: "2px 0px", textAlign: "left", }}>{player.playerName}</span>
+                <span style={{ margin: "2px 0px", textAlign: "right", }}>{player.totalRuns} ({player.runs.length})</span>
+                <span style={{ margin: "2px 0px", textAlign: "center", }}>{player.fours}</span>
+                <span style={{ margin: "2px 0px", textAlign: "center", }}>{player.sixes}</span>
+                <span style={{ margin: "2px 0px", textAlign: "center", }}>{player.strikeRate}</span>
+              </div>
+            )
+          }
+        </div>
+
+
+
+        <h2 style={{ textAlignLast: "left" }}>Bowling Scorecard</h2>
+
+        <div style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr", fontSize: "0.9em", borderBottom:"3px solid whitesmoke", }}>
+          <span style={{ margin: "2px 0px", textAlign: "left" }}>Player</span>
+          <span style={{ margin: "2px 0px", }}>O</span>
+          <span style={{ margin: "2px 0px", }}>R</span>
+          <span style={{ margin: "2px 0px", }}>W</span>
+          <span style={{ margin: "2px 0px", }}>M</span>
+          <span style={{ margin: "2px 0px", }}>Econ</span>
+        </div>
+
+        <div>
+          {
+            _inningsOneBowlingScoreCard?.map((player, id) => {
+
+              const ballsDelivered = player.runs.length;
+              const oversCount = ballsDelivered / 6;
+              const remainingBalls = ballsDelivered - (oversCount * 6);
+              const runsConceded = addRuns(player.runs);
+              const wickets = player.runs.filter(run => typeof run === "string").length;
+              const economy = runsConceded / oversCount;
+
+              return (
+                <div key={id} style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr", fontSize: "0.9em", borderBottom:"1px solid whitesmoke", }}>
+                  <span style={{ margin: "2px 0px", textAlign: "left" }}>{player.playerName}</span>
+                  <span style={{ margin: "2px 0px", textAlign: "center" }}>{oversCount}.{remainingBalls}</span>
+                  <span style={{ margin: "2px 0px", textAlign: "center" }}>{runsConceded}</span>
+                  <span style={{ margin: "2px 0px", textAlign: "center" }}>{wickets}</span>
+                  <span style={{ margin: "2px 0px", textAlign: "center" }}>{wickets}</span>
+                  <span style={{ margin: "2px 0px", textAlign: "center" }}>{economy}</span>
+                </div>
+              )
+            }
+            )
+          }
+        </div>
+
+      </details>
+
+    </div>
+  )
+}
