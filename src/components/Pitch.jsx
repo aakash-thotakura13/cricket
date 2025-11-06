@@ -313,10 +313,16 @@ export const Pitch = ({
         {
           Object.keys(_bowler).length > 0
             ?
+            <>
             <p style={{ display: "flex", justifyContent: "space-between" }}>
               <span>{_bowler.playerName}</span>
               <span>{addRuns(_bowler?.runs)} / {wicketsCounter(_bowler?.runs)}</span>
             </p>
+            <p style={{ display: "flex", justifyContent: "space-between" }}>
+              <span>{_prevBowler.playerName}</span>
+              <span>{addRuns(_prevBowler?.runs)} / {wicketsCounter(_prevBowler?.runs)}</span>
+            </p>
+            </>
             :
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.25em", fontSize: "0.85em" }}>
               {
