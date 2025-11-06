@@ -1,7 +1,7 @@
 
 export default function wicketsCounter(runs) {
 
-  if (runs.length === 0) {
+  if (runs === undefined || runs.length === 0) {
 
     return 0;
 
