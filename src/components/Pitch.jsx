@@ -16,7 +16,8 @@ export const Pitch = ({
   bowlingTeam, setBowlingTeam,
   battingCard, setBattingCard,
   bowlingCard, setBowlingCard,
-  partnershipData, setpartnershipData
+  partnershipData, setpartnershipData,
+  allOvers, setAllOvers
 }) => {
 
   const [_playerOne, setPlayerOne] = useAtom(playerOne);
@@ -69,6 +70,8 @@ export const Pitch = ({
       setBowlingCard(updatedArray);
 
     }
+
+    setAllOvers([...allOvers, _overRuns]);
 
     setOverRuns([]);
     setBowler({});
@@ -240,7 +243,6 @@ export const Pitch = ({
 
   return (
     <>
-      <h1>Pitch</h1>
 
       <ScoreBar team={battingTeam} />
 
@@ -249,14 +251,16 @@ export const Pitch = ({
           Object.keys(_playerOne).length > 0 && Object.keys(_playerTwo).length > 0
             ? <div onClick={() => game()} style={{ width: "350px", margin: "0em auto 1em", aspectRatio: "1.35/1", backgroundColor: "green", borderRadius: "45%", display: "flex", flexDirection: "column", justifyContent: "space-between", }}>
 
-              <p>
+              <p style={{ padding: "0em", }}>
                 {
                   _onStrike
                     ? <>
-                      <span>{_playerOne.playerName}</span> <br /> <span>{addRuns(_playerOne?.runs)} ({_playerOne?.runs?.length})</span>
+                      <span>{_playerOne.playerName}</span> <br />
+                      <span>{addRuns(_playerOne?.runs)} ({_playerOne?.runs?.length})</span>
                     </>
                     : <>
-                      <span>{_playerTwo.playerName}</span> <br /> <span>{addRuns(_playerTwo?.runs)} ({_playerTwo?.runs?.length})</span>
+                      <span>{_playerTwo.playerName}</span> <br />
+                      <span>{addRuns(_playerTwo?.runs)} ({_playerTwo?.runs?.length})</span>
                     </>
                 }
               </p>
@@ -267,14 +271,16 @@ export const Pitch = ({
                 {_overRuns?.map((run, id) => <span key={id}>{run}, </span>)}
               </div>
 
-              <p>
+              <p style={{ padding: "0em", }}>
                 {
                   _onStrike
                     ? <>
-                      <span>{_playerTwo.playerName}</span> <br /> <span>{addRuns(_playerTwo?.runs)} ({_playerTwo?.runs?.length})</span>
+                      <span>{_playerTwo.playerName}</span> <br />
+                      <span>{addRuns(_playerTwo?.runs)} ({_playerTwo?.runs?.length})</span>
                     </>
                     : <>
-                      <span>{_playerOne.playerName}</span> <br /> <span>{addRuns(_playerOne?.runs)} ({_playerOne?.runs?.length})</span>
+                      <span>{_playerOne.playerName}</span> <br />
+                      <span>{addRuns(_playerOne?.runs)} ({_playerOne?.runs?.length})</span>
                     </>
                 }
               </p>
@@ -314,14 +320,14 @@ export const Pitch = ({
           Object.keys(_bowler).length > 0
             ?
             <>
-            <p style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>{_bowler.playerName}</span>
-              <span>{addRuns(_bowler?.runs)} / {wicketsCounter(_bowler?.runs)}</span>
-            </p>
-            <p style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>{_prevBowler.playerName}</span>
-              <span>{addRuns(_prevBowler?.runs)} / {wicketsCounter(_prevBowler?.runs)}</span>
-            </p>
+              <p style={{ display: "flex", justifyContent: "space-between", margin: "0.25em 0em", }}>
+                <span>{_bowler.playerName}</span>
+                <span>{addRuns(_bowler?.runs)} / {wicketsCounter(_bowler?.runs)}</span>
+              </p>
+              <p style={{ display: "flex", justifyContent: "space-between", margin: "0.25em 0em", }}>
+                <span>{_prevBowler.playerName}</span>
+                <span>{addRuns(_prevBowler?.runs)} / {wicketsCounter(_prevBowler?.runs)}</span>
+              </p>
             </>
             :
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.25em", fontSize: "0.85em" }}>

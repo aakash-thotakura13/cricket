@@ -1,5 +1,5 @@
 import { useAtom } from "jotai"
-import { inningsOne, inningsOneBattingScoreCard, inningsOneBowlingScoreCard, inningsOnePartnershipCard, inningsTwo, inningsTwoBattingScoreCard, inningsTwoBowlingScoreCard, inningsTwoPartnershipCard, startGame, teamOne, teamTwo } from "../jotai/atom"
+import { inningsOne, inningsOneBattingScoreCard, inningsOneBowlingScoreCard, inningsOneAllOvers, inningsOnePartnershipCard, inningsTwo, inningsTwoBattingScoreCard, inningsTwoBowlingScoreCard, inningsTwoAllOvers, inningsTwoPartnershipCard, startGame, teamOne, teamTwo } from "../jotai/atom"
 import { australia2025, india2025, indianW, southAfricaW } from "../database"
 import { Pitch } from "../components/Pitch";
 
@@ -16,10 +16,12 @@ export const SelectTeam = () => {
   const [_inningsOneBattingScoreCard, setInningsOneBattingScoreCard] = useAtom(inningsOneBattingScoreCard);
   const [_inningsOneBowlingScoreCard, setInningsOneBowlingScoreCard] = useAtom(inningsOneBowlingScoreCard);
   const [_inningsOnePartnershipCard, setInningsOnePartnershipCard] = useAtom(inningsOnePartnershipCard);
+  const [_inningsOneAllovers, setInningsOneAllOvers] = useAtom(inningsOneAllOvers);
 
   const [_inningsTwoBattingScoreCard, setInningsTwoBattingScoreCard] = useAtom(inningsTwoBattingScoreCard);
   const [_inningsTwoBowlingScoreCard, setInningsTwoBowlingScoreCard] = useAtom(inningsTwoBowlingScoreCard);
   const [_inningsTwoPartnershipCard, setInningsTwoPartnershipCard] = useAtom(inningsTwoPartnershipCard);
+  const [_inningsTwoAllovers, setInningsTwoAllOvers] = useAtom(inningsTwoAllOvers);
 
   const [game, setGame] = useAtom(startGame);
 
@@ -85,6 +87,8 @@ export const SelectTeam = () => {
                   setBowlingCard={setInningsOneBowlingScoreCard}
                   partnerShipData={_inningsOnePartnershipCard}
                   setPartnershipData={setInningsOnePartnershipCard}
+                  allOvers={_inningsOneAllOvers}
+                  setAllOvers={setInningsOneAllOvers}
                 />
                 : <Pitch
                   battingTeam={_teamTwo}
@@ -97,11 +101,12 @@ export const SelectTeam = () => {
                   setBowlingCard={setInningsTwoBowlingScoreCard}
                   partnerShipData={_inningsTwoPartnershipCard}
                   setPartnershipData={setInningsTwoPartnershipCard}
+                  allOvers={_inningsTwoAllOvers}
+                  setAllOvers={setInningsTwoAllOvers}
                 />
             }
           </>
       }
-
 
     </section>
 
