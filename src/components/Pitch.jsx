@@ -7,8 +7,9 @@ import { ScoreBar } from "./ScoreBar";
 import addRuns from "../function/addRuns"
 import { addBatsman, addBowler } from "../function/addPlayers";
 import generateRuns from "../function/generateRuns";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import wicketsCounter from "../function/wicketsCounter";
+import updateBowler from "../function/updatePlayer";
 
 
 export const Pitch = ({
@@ -34,57 +35,19 @@ export const Pitch = ({
   const [_onStrike, setOnStrike] = useAtom(onStrike);
 
 
-  useEffect(() => {
-
-    if (_overRuns.length > 5 && _overRuns.length === 6) {
-
-      overUp();
-
-    };
-
-  }, [_playerOne, _playerTwo, _bowler, _onStrike, overUp]);
-
-
-
-  function overUp() {
-
-    const findBowlerId = bowlingCard.findIndex(bowler => bowler.playerName === _bowler.playerName);
-
-    if (findBowlerId === -1) {
-
-      const bowlerEntry = {
-        ..._bowler,
-        overDetails: [_overRuns],
-      }
-
-      setBowlingCard([...bowlingCard, bowlerEntry]);
-
-    } else {
-
-      const bowlerEntry = {
-        ..._bowler,
-        overDetails: [..._bowler.overDetails, _overRuns,],
-      }
-
-      const updatedArray = bowlingCard.map((bowler, index) => index === findBowlerId ? bowlerEntry : bowler);
-      setBowlingCard(updatedArray);
-
-    }
-
-    // const eachOver = {
-    //   playerOne: _playerOne,
-    //   playerTwo: _playerTwo,
-    //   bowler: _bowler,
-    //   overRuns: _overRuns,
-    // };
-
-    // setAllOvers([...allOvers, eachOver]);
-
+  const overUp = useCallback(() => {
     setOverRuns([]);
+    setPrevBowler(prev => _bowler);
     setBowler({});
-    setPrevBowler(_bowler);
+  }, [_bowler]);
 
-  };
+  useEffect(() => {
+    if (_overRuns.length > 5 && _overRuns.length === 6) {
+      overUp();
+      console.log("overUp")
+    }
+  }, [_overRuns, overUp]);
+
 
 
   function game() {
@@ -97,15 +60,12 @@ export const Pitch = ({
     const run = generateRuns();
     setRun(run);
 
-    const overRuns = [..._overRuns, run];
+    const overRuns = [..._overRuns, run,];
     setOverRuns(overRuns);
 
-    const bowlerUpdate = {
-      ..._bowler,
-      runs: [..._bowler.runs, run],
-    }
-
-    setBowler(bowlerUpdate);
+    const { bowlerEntry, updatedArray } = updateBowler(run, _bowler, bowlingCard,)
+    setBowler(bowlerEntry);
+    setBowlingCard(updatedArray);
 
     if (run % 2 !== 0) {
       setOnStrike(!_onStrike);
@@ -206,7 +166,7 @@ export const Pitch = ({
         let strikeRate = (totalRuns * 100 / totalDeliveries).toFixed(2);
 
         const playerEntry = {
-          playerName: _playerOne.playerName,
+          ..._playerOne,
           runs,
           totalRuns,
           totalDeliveries,
@@ -215,13 +175,23 @@ export const Pitch = ({
           sixes: _playerOne.runs.filter(run => run === 6).length
         };
 
-        const findPlayer = battingCard.findIndex(player => player.playerName === _playerOne.playerName);
-
-        const updatedArray = battingCard.map((player, index) => index === findPlayer ? playerEntry : player);
-        setBattingCard(updatedArray);
+        console.log("_playerOne", playerEntry)
 
         setPlayerOne(playerEntry);
         setPartnerOne(playerEntry);
+
+        const findPlayer = battingCard.findIndex(player => player.playerName === _playerOne.playerName);
+        const updatedArray = battingCard.map((player, index) => index === findPlayer ? playerEntry : player);
+        setBattingCard(updatedArray);
+
+        const eachOver = {
+          playerOne: playerEntry,
+          playerTwo: _playerTwo,
+          bowler: bowlerEntry,
+          overRuns,
+        };
+
+        setAllOvers([...allOvers, eachOver]);
 
       } else {
 
@@ -231,7 +201,7 @@ export const Pitch = ({
         let strikeRate = (totalRuns * 100 / totalDeliveries).toFixed(2);
 
         const playerEntry = {
-          playerName: _playerTwo.playerName,
+          ..._playerTwo,
           runs,
           totalRuns,
           totalDeliveries,
@@ -240,19 +210,30 @@ export const Pitch = ({
           sixes: _playerTwo.runs.filter(run => run === 6).length
         };
 
+        console.log("_playerTwo", playerEntry)
+
+        setPlayerTwo(playerEntry);
+        setPartnerTwo(playerEntry);
+
         const findPlayer = battingCard.findIndex(player => player.playerName === _playerTwo.playerName);
 
         const updatedArray = battingCard.map((player, index) => index === findPlayer ? playerEntry : player);
         setBattingCard(updatedArray);
 
-        setPlayerTwo(playerEntry);
-        setPartnerTwo(playerEntry);
+        const eachOver = {
+          playerOne: _playerOne,
+          playerTwo: playerEntry,
+          bowler: bowlerEntry,
+          overRuns,
+        };
+
+        setAllOvers([...allOvers, eachOver]);
+
       }
     }
-  };
 
-  console.clear()
-  console.log(...battingCard)
+
+  };
 
 
   return (
@@ -356,7 +337,7 @@ export const Pitch = ({
                         padding: "0.25em 0.5em",
                         textAlign: "left",
                       }}
-                      onClick={() => addBowler(player, bowlingCard, setBowler,)}
+                      onClick={() => addBowler(player, setBowler, bowlingCard, setBowlingCard,)}
                     >
                       {player}
                     </li>
