@@ -18,33 +18,48 @@ export const OverDetails = () => {
       {
         _inningsOneAllOvers.map((entry, id) => {
           return (
-            <div key={id} style={{ border: "0.1em thin whitesmoke", margin: "0.7em 0em", padding: "0.7em 1.4em 0.7em 0.7em", borderRadius: "2.5em", display: "grid", gridTemplateColumns: "1fr 3fr 1fr", alignItems: "center", gap: "1em", }}>
+            <details key={id} style={{ padding: "0em", margin: "0.5em 0em", border: "0.1em solid whitesmoke", borderRadius: "2.5em", }}>
 
-              <p style={{ fontSize: "3em", backgroundColor: "#ccc", color: "black", borderRadius: "50%", }}>{id + 1}</p>
+              <summary style={{ margin: "0em 0em", padding: "0.7em 1.4em 0.7em 0.7em", display: "grid", gridTemplateColumns: "1fr 3fr 1fr", alignItems: "center", gap: "1em", }}>
 
-              <div>
+                <p style={{ fontSize: "3em", backgroundColor: "#ccc", color: "black", borderRadius: "50%", }}>{id + 1}</p>
 
-                <p style={{  textAlign: "left", background: "#ccc", color: "black", borderRadius:"0.5em 0.7em", margin: "0.25em 0em", padding: "0em 0.3em", }}>{entry.bowler.playerName}</p>
+                <div>
 
+                  <p style={{ textAlign: "left", background: "#ccc", color: "black", borderRadius: "0.5em 0.7em", margin: "0.5em 0em", padding: "0em 0.3em", }}>{entry.bowler.playerName}</p>
 
-                <p style={{ display: "flex", justifyContent: "space-between", margin: "0.25em 0em", padding: "0em 0.3em", }}>
-                  <span>{entry.playerOne.playerName}</span>
-                  <span>{entry.playerOne.totalRuns} ({entry.playerOne.totalDeliveries})</span>
-                </p>
-                <p style={{ display: "flex", justifyContent: "space-between", margin: "0.25em 0em", padding: "0em 0.3em", }}>
-                  <span>{entry.playerTwo.playerName}</span>
-                  <span>{entry.playerTwo.totalRuns} ({entry.playerTwo.totalDeliveries})</span>
-                </p>
+                  <p style={{ display: "flex", justifyContent: "space-between", margin: "0.25em 0em", padding: "0em 0.3em", }}>
+                    <span>{entry.playerOne.playerName}</span>
+                    <span>{entry.playerOne.totalRuns} ({entry.playerOne.totalDeliveries})</span>
+                  </p>
+                  <p style={{ display: "flex", justifyContent: "space-between", margin: "0.25em 0em", padding: "0em 0.3em", }}>
+                    <span>{entry.playerTwo.playerName}</span>
+                    <span>{entry.playerTwo.totalRuns} ({entry.playerTwo.totalDeliveries})</span>
+                  </p>
 
+                </div>
+
+                <div style={{ fontSize: "1.5em" }}>
+                  <p>{addRuns(entry.overRuns)}</p>
+                  <hr />
+                  <p>{wicketsCounter(entry.overRuns)}</p>
+                </div>
+
+              </summary>
+
+              <hr style={{ width: "90%", margin: "auto" }} />
+
+              <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+                {
+                  entry.overRuns.map((run, id) => {
+                    return (
+                      <span key={id} style={{ width: "40px", margin: "0.5em", aspectRatio: "1.2/1", fontSize: "1.7em", backgroundColor: "#ccc", color: "black", borderRadius: "50%", }} >{run}</span>
+                    )
+                  })
+                }
               </div>
 
-              <div style={{ fontSize: "1.5em" }}>
-                <p>{addRuns(entry.overRuns)}</p>
-                <hr />
-                <p>{wicketsCounter(entry.overRuns)}</p>
-              </div>
-
-            </div>
+            </details>
           )
         })
       }
