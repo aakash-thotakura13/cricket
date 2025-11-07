@@ -71,14 +71,14 @@ export const Pitch = ({
 
     }
 
-    const eachOver = {
-      playerOne: _playerOne,
-      playerTwo: _playerTwo,
-      bowler: _bowler,
-      overRuns: _overRuns,
-    };
+    // const eachOver = {
+    //   playerOne: _playerOne,
+    //   playerTwo: _playerTwo,
+    //   bowler: _bowler,
+    //   overRuns: _overRuns,
+    // };
 
-    setAllOvers([...allOvers, eachOver]);
+    // setAllOvers([...allOvers, eachOver]);
 
     setOverRuns([]);
     setBowler({});
@@ -96,9 +96,16 @@ export const Pitch = ({
 
     const run = generateRuns();
     setRun(run);
-    setOverRuns([..._overRuns, run]);
 
-    setBowler({ ..._bowler, runs: [..._bowler.runs, run] });
+    const overRuns = [..._overRuns, run];
+    setOverRuns(overRuns);
+
+    const bowlerUpdate = {
+      ..._bowler,
+      runs: [..._bowler.runs, run],
+    }
+
+    setBowler(bowlerUpdate);
 
     if (run % 2 !== 0) {
       setOnStrike(!_onStrike);
@@ -251,7 +258,7 @@ export const Pitch = ({
   return (
     <>
 
-      <ScoreBar team={battingTeam} />
+      <ScoreBar team={battingTeam} allOvers={allOvers} />
 
       <div>
         {
@@ -274,7 +281,7 @@ export const Pitch = ({
 
               <div>
                 <p style={{ fontSize: "2.7em", margin: "0em", padding: "0em", }}>{_run}</p>
-                <hr style={{ width: "80%" }} />
+                <hr style={{ width: "80%", margin: "auto", padding: "0em", }} />
                 {_overRuns?.map((run, id) => <span key={id}>{run}, </span>)}
               </div>
 
@@ -318,9 +325,7 @@ export const Pitch = ({
         }
       </div>
 
-
       <br />
-
 
       <div>
         {
