@@ -1,5 +1,5 @@
 export const indianW = {
-  teamName: "India-Women",
+  teamName: "India 2025 (W)",
   tag: "INDW",
   teamMembers: [
     "Smriti Mandhana",
@@ -17,7 +17,7 @@ export const indianW = {
 };
 
 export const southAfricaW = {
-  teamName: "South African Women",
+  teamName: "South Africa 2025 (W)",
   tag: "SAW",
   teamMembers: [
     "Laura Wolvaardt (C)",
