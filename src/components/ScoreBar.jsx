@@ -6,8 +6,6 @@ export const ScoreBar = ({ team, allOvers }) => {
   const overCount = allOvers.length;
   const deliveryCount = overs.length;
 
-  console.log(...allOvers);
-
   return (
     <p style={{ fontSize: "1.2em", display: "flex", justifyContent: "space-between", }}>
       <span>{team.tag}</span>
