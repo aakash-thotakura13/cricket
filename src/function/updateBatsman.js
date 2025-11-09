@@ -1,7 +1,7 @@
 import addRuns from "./addRuns";
 
 export default function updateBatsman(run, selectedPlayer, battingCard) {
-  console.log("updatBatsman() is called.");
+  
   let runs = [...selectedPlayer.runs, run];
   let totalRuns = addRuns(runs);
   let totalDeliveries = runs.length;

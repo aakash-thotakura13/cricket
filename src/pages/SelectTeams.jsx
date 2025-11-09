@@ -2,6 +2,7 @@ import { useAtom } from "jotai"
 import { inningsOne, inningsOneBattingScoreCard, inningsOneBowlingScoreCard, inningsOneAllOvers, inningsOnePartnershipCard, inningsTwo, inningsTwoBattingScoreCard, inningsTwoBowlingScoreCard, inningsTwoAllOvers, inningsTwoPartnershipCard, startGame, teamOne, teamTwo } from "../jotai/atom"
 import { australia2025, india2025, indianW, southAfricaW } from "../database"
 import { Pitch } from "../components/Pitch";
+import { SelectedTeam } from "../components/SelectedTeam";
 
 const allTeams = [indianW, southAfricaW, india2025, australia2025,];
 
@@ -44,7 +45,7 @@ export const SelectTeam = () => {
   };
 
   return (
-    <section style={{fontSize:"0.95em"}}>
+    <section style={{ fontSize: "0.95em" }}>
 
       {
         !game
@@ -54,21 +55,37 @@ export const SelectTeam = () => {
               (Object.keys(_teamOne).length > 0 && Object.keys(_teamTwo).length > 0)
                 ? <>
                   <div style={{ display: "grid", placeContent: "center", }}>
-                    <p style={{ display: "flex", alignItems: "flex-start", justifyContent: "center", }}>
-                      <span style={{ fontSize: "1.2em", }}>{_teamOne?.teamName}</span>
-                      <span style={{ backgroundColor: "red", borderRadius: "50%", padding: "0em 0.35em", marginLeft: "0.5em", aspectRatio: "1/1", fontSize: "0.7em", }} onClick={() => setTeamOne({})}>x</span></p>
+
+                    <SelectedTeam teamName={_teamOne?.teamName} />
+
                     <p style={{ fontSize: "5em", padding: "0em", margin: "0em", fontStyle: "italic" }}>Vs</p>
-                    <p style={{ display: "flex", alignItems: "flex-start", justifyContent: "center", }}>
-                      <span style={{ fontSize: "1.2em", }}>{_teamTwo?.teamName}</span>
-                      <span style={{ backgroundColor: "red", borderRadius: "50%", padding: "0em 0.35em", marginLeft: "0.5em", aspectRatio: "1/1", fontSize: "0.7em", }} onClick={() => setTeamOne({})}>x</span></p>
+
+                    <SelectedTeam teamName={_teamTwo?.teamName} />
+
                   </div>
+
                   <div>
                     <button onClick={() => setGame(true)}>Start</button>
                   </div>
                 </>
                 : <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.7em", }}>
                   {
-                    allTeams.map((team, id) => <li key={id} onClick={() => teamSelection(team)} style={{ border: "1px solid #ccc", borderRadius: "1em", padding: "0.5em", cursor: "pointer", backgroundColor: team.teamName === _teamOne?.teamName || team.teamName === _teamTwo?.teamName ? "grey" : "" }}>{team.teamName}</li>)
+                    allTeams
+                      .map((team, id) =>
+                        <li
+                          key={id}
+                          onClick={() => teamSelection(team)}
+                          style={{
+                            border: "1px solid #ccc",
+                            borderRadius: "1em",
+                            padding: "0.5em",
+                            cursor: "pointer",
+                            backgroundColor: team.teamName === _teamOne?.teamName || team.teamName === _teamTwo?.teamName ? "grey" : ""
+                          }}
+                        >
+                          {team.teamName}
+                        </li>
+                      )
                   }
                 </div>
             }
@@ -85,7 +102,7 @@ export const SelectTeam = () => {
                   setBattingCard={setInningsOneBattingScoreCard}
                   bowlingCard={_inningsOneBowlingScoreCard}
                   setBowlingCard={setInningsOneBowlingScoreCard}
-                  partnerShipData={_inningsOnePartnershipCard}
+                  partnershipData={_inningsOnePartnershipCard}
                   setPartnershipData={setInningsOnePartnershipCard}
                   allOvers={_inningsOneAllovers}
                   setAllOvers={setInningsOneAllOvers}
