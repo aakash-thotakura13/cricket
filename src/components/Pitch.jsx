@@ -7,7 +7,7 @@ import { ScoreBar } from "./ScoreBar";
 import addRuns from "../function/addRuns"
 import { addBatsman, addBowler } from "../function/addPlayers";
 import generateRuns from "../function/generateRuns";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import wicketsCounter from "../function/wicketsCounter";
 import updateBowler from "../function/updateBowler";
 import updateBatsman from "../function/updateBatsman";
@@ -18,7 +18,7 @@ export const Pitch = ({
   bowlingTeam, setBowlingTeam,
   battingCard, setBattingCard,
   bowlingCard, setBowlingCard,
-  partnershipData, setpartnershipData,
+  partnershipData, setPartnershipData,
   allOvers, setAllOvers
 }) => {
 
@@ -35,6 +35,7 @@ export const Pitch = ({
   const [_overRuns, setOverRuns] = useAtom(overRuns);
   const [_onStrike, setOnStrike] = useAtom(onStrike);
   const [_activePartnership, setActivePartnership] = useAtom(activePartnership);
+  const outPlayer = useRef(null);
 
 
   const overUp = useCallback(() => {
@@ -59,10 +60,8 @@ export const Pitch = ({
   useEffect(() => {
     if (_overRuns.length > 5 && _overRuns.length === 6) {
       overUp();
-      console.log("overUp")
     }
   }, [_overRuns, overUp]);
-
 
 
   function game() {
@@ -82,35 +81,26 @@ export const Pitch = ({
     setBowler(bowlerEntry);
     setBowlingCard(updatedArray);
 
-    if (run % 2 !== 0) {
-      setOnStrike(!_onStrike);
-    }
 
     if (typeof run === "string") {
 
+      console.log("Wicket! onStrike:", _onStrike ? "playerOne" : "playerTwo");
+
       if (_onStrike) {
 
-        const { playerEntry, updatedArray } = updateBatsman(run, _playerOne, battingCard,);
+        alert(`${_playerOne.playerName} is out`);
+        outPlayer.current = "playerOne";
+
+        const { playerEntry, updatedArray } = updateBatsman(run, _playerOne, battingCard, _bowler.playerName, bowlingTeam);
 
         setBattingCard(updatedArray);
 
-        let partnershipRuns = [..._playerOne.runs, ..._playerTwo.runs, run,];
-        let partnershipTotalRuns = addRuns(partnershipRuns);
-        let partnershipTotalDeliveries = partnershipRuns.length;
-        let partnershipStrikeRate = (partnershipTotalRuns * 100 / partnershipTotalDeliveries).toFixed(2);
-
         const partnershipEntry = {
-          playerOne: _playerOne.playerName,
-          playerTwo: _playerTwo.playerName,
-          runs: partnershipRuns,
-          totalRuns: partnershipTotalRuns,
-          strikeRate: partnershipStrikeRate,
-          ballsFaced: partnershipTotalDeliveries,
-          fours: partnershipRuns.filter(run => run === 4).length,
-          sixes: partnershipRuns.filter(run => run === 6).length,
+          playerOne: playerEntry,
+          playerTwo: _playerTwo,
         };
 
-        setpartnershipData([...partnershipData, partnershipEntry]);
+        setPartnershipData([...partnershipData, partnershipEntry]);
 
         setPlayerOne({});
         setPartnerOne({});
@@ -118,27 +108,19 @@ export const Pitch = ({
 
       } else {
 
-        const { playerEntry, updatedArray } = updateBatsman(run, _playerTwo, battingCard,);
+        alert(`${_playerTwo.playerName} is out`);
+        outPlayer.current = "playerTwo";
+
+        const { playerEntry, updatedArray } = updateBatsman(run, _playerTwo, battingCard, _bowler.playerName, bowlingTeam);
 
         setBattingCard(updatedArray);
 
-        let partnershipRuns = [..._playerOne.runs, ..._playerTwo.runs, run,];
-        let partnershipTotalRuns = addRuns(partnershipRuns);
-        let partnershipTotalDeliveries = partnershipRuns.length;
-        let partnershipStrikeRate = (partnershipTotalRuns * 100 / partnershipTotalDeliveries).toFixed(2);
-
         const partnershipEntry = {
-          playerOne: _playerOne.playerName,
-          playerTwo: _playerTwo.playerName,
-          runs: partnershipRuns,
-          totalRuns: partnershipTotalRuns,
-          strikeRate: partnershipStrikeRate,
-          ballsFaced: partnershipTotalDeliveries,
-          fours: partnershipRuns.filter(run => run === 4).length,
-          sixes: partnershipRuns.filter(run => run === 6).length,
+          playerOne: _playerOne,
+          playerTwo: playerEntry,
         };
 
-        setpartnershipData([...partnershipData, partnershipEntry]);
+        setPartnershipData([...partnershipData, partnershipEntry]);
 
         setPlayerTwo({});
         setPartnerTwo({});
@@ -147,9 +129,14 @@ export const Pitch = ({
       }
     } else {
 
+      if (run % 2 !== 0) {
+        setOnStrike(!_onStrike)
+      };
+
+
       if (_onStrike) {
 
-        const { playerEntry, updatedArray } = updateBatsman(run, _playerOne, battingCard,);
+        const { playerEntry, updatedArray } = updateBatsman(run, _playerOne, battingCard, null, bowlingTeam);
 
         setPlayerOne(playerEntry);
         setBattingCard(updatedArray);
@@ -164,7 +151,7 @@ export const Pitch = ({
 
       } else {
 
-        const { playerEntry, updatedArray } = updateBatsman(run, _playerTwo, battingCard,);
+        const { playerEntry, updatedArray } = updateBatsman(run, _playerTwo, battingCard, null, bowlingTeam);
 
         setPlayerTwo(playerEntry);
         setBattingCard(updatedArray);
@@ -180,7 +167,6 @@ export const Pitch = ({
       }
     }
   };
-
 
 
   return (
@@ -264,10 +250,10 @@ export const Pitch = ({
                         border: "2px solid #ccc",
                         borderRadius: "1em",
                         cursor: "pointer",
-                        padding: "0.25em 0.5em",
+                        padding: "0.35em 0.7em",
                         textAlign: "left",
                       }}
-                      onClick={() => addBatsman(player, _playerOne, setPlayerOne, _playerTwo, setPlayerTwo, setPartnerOne, setPartnerTwo, battingCard, setBattingCard)}
+                      onClick={() => addBatsman(player, _playerOne, setPlayerOne, _playerTwo, setPlayerTwo, setPartnerOne, setPartnerTwo, battingCard, setBattingCard, outPlayer.current)}
                     >
                       {player}
                     </li>
@@ -306,7 +292,7 @@ export const Pitch = ({
                         border: "2px solid #ccc",
                         borderRadius: "1em",
                         cursor: "pointer",
-                        padding: "0.25em 0.5em",
+                        padding: "0.35em 0.7em",
                         textAlign: "left",
                       }}
                       onClick={() => addBowler(player, setBowler, bowlingCard, setBowlingCard,)}
