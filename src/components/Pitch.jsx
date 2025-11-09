@@ -90,85 +90,59 @@ export const Pitch = ({
 
       if (_onStrike) {
 
-        let runs = [..._playerOne.runs, run];
-        let totalRuns = addRuns(runs);
-        let totalDeliveries = runs.length;
-        let strikeRate = (totalRuns * 100 / totalDeliveries).toFixed(2);
+        const { playerEntry, updatedArray } = updateBatsman(run, _playerOne, battingCard,);
 
-        const playerEntry = {
-          playerName: _playerOne.playerName,
-          runs,
-          totalRuns,
-          totalDeliveries,
-          strikeRate,
-          fours: _playerOne.runs.filter(run => run === 4).length,
-          sixes: _playerOne.runs.filter(run => run === 6).length
-        };
+        setBattingCard(updatedArray);
 
-        setBattingCard([...battingCard, playerEntry]);
-
-        let partnershipRuns = [..._playerOne.runs, run, ..._playerTwo.runs];
+        let partnershipRuns = [..._playerOne.runs, ..._playerTwo.runs, run,];
         let partnershipTotalRuns = addRuns(partnershipRuns);
         let partnershipTotalDeliveries = partnershipRuns.length;
         let partnershipStrikeRate = (partnershipTotalRuns * 100 / partnershipTotalDeliveries).toFixed(2);
 
         const partnershipEntry = {
-          player1: _playerOne.playerName,
-          player2: _playerTwo.playerName,
+          playerOne: _playerOne.playerName,
+          playerTwo: _playerTwo.playerName,
           runs: partnershipRuns,
           totalRuns: partnershipTotalRuns,
           strikeRate: partnershipStrikeRate,
           ballsFaced: partnershipTotalDeliveries,
-          fours: [..._playerOne.runs, run, ..._playerTwo.runs].filter(run => run === 4).length,
-          sixes: [..._playerOne.runs, run, ..._playerTwo.runs].filter(run => run === 6).length
+          fours: partnershipRuns.filter(run => run === 4).length,
+          sixes: partnershipRuns.filter(run => run === 6).length,
         };
 
         setpartnershipData([...partnershipData, partnershipEntry]);
 
         setPlayerOne({});
         setPartnerOne({});
-        setPartnerTwo({ playerName: _partnerTwo.playerName, runs: [] });
+        setPartnerTwo({ ..._playerTwo, runs: [] });
 
       } else {
 
-        let runs = [..._playerTwo.runs, run];
-        let totalRuns = addRuns(runs);
-        let totalDeliveries = runs.length;
-        let strikeRate = (totalRuns * 100 / totalDeliveries).toFixed(2);
+        const { playerEntry, updatedArray } = updateBatsman(run, _playerTwo, battingCard,);
 
-        const playerEntry = {
-          playerName: _playerTwo.playerName,
-          runs,
-          totalRuns,
-          totalDeliveries,
-          strikeRate,
-          fours: _playerTwo.runs.filter(run => run === 4).length,
-          sixes: _playerTwo.runs.filter(run => run === 6).length
-        };
+        setBattingCard(updatedArray);
 
-        setBattingCard([...battingCard, playerEntry]);
-
-        let partnershipRuns = [..._playerTwo.runs, run, ..._playerTwo.runs];
+        let partnershipRuns = [..._playerOne.runs, ..._playerTwo.runs, run,];
         let partnershipTotalRuns = addRuns(partnershipRuns);
         let partnershipTotalDeliveries = partnershipRuns.length;
         let partnershipStrikeRate = (partnershipTotalRuns * 100 / partnershipTotalDeliveries).toFixed(2);
 
         const partnershipEntry = {
-          player1: _playerTwo.playerName,
-          player2: _playerOne.playerName,
+          playerOne: _playerOne.playerName,
+          playerTwo: _playerTwo.playerName,
           runs: partnershipRuns,
           totalRuns: partnershipTotalRuns,
           strikeRate: partnershipStrikeRate,
           ballsFaced: partnershipTotalDeliveries,
-          fours: [..._playerOne.runs, run, ..._playerTwo.runs].filter(run => run === 4).length,
-          sixes: [..._playerOne.runs, run, ..._playerTwo.runs].filter(run => run === 6).length,
+          fours: partnershipRuns.filter(run => run === 4).length,
+          sixes: partnershipRuns.filter(run => run === 6).length,
         };
 
         setpartnershipData([...partnershipData, partnershipEntry]);
 
         setPlayerTwo({});
-        setPartnerOne({ playerName: _partnerOne.playerName, runs: [] });
         setPartnerTwo({});
+        setPartnerOne({ ..._playerOne, runs: [] });
 
       }
     } else {
