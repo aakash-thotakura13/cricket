@@ -1,9 +1,9 @@
 #root {
   max-width: 380px;
   margin: 0 auto;
-  padding: 2rem;
+  /* padding: 2rem; */
   text-align: center;
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
 }
 
 button {

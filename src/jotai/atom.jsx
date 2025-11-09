@@ -28,6 +28,7 @@ export const partnerTwo = atom({});
 export const run = atom(0);
 export const overRuns = atom([]);
 export const onStrike = atom(true);
+export const activePartnership = atom([]);
 
 export const inningsOneAllOvers = atom([]);
 export const inningsTwoAllOvers = atom([]);
