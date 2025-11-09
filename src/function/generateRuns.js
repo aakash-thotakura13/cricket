@@ -14,7 +14,7 @@ export default function generateRuns() {
     3, 3, 3,
     4, 4, 4, 4, 4,
     6, 6, 6,
-    // "Out", "Out", "Out", "Out", "Out",
+    "Bowled", "Caught", "LBW", "Stumped", 
   ];
 
   return runsArray[Math.floor(Math.random() * runsArray.length)];
