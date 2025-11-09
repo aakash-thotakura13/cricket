@@ -6,11 +6,7 @@ export default function updateBatsman(run, selectedPlayer, battingCard, bowler, 
   let totalRuns = addRuns(runs);
   let totalDeliveries = runs.length;
   let strikeRate = ((totalRuns * 100) / totalDeliveries).toFixed(2);
-  let fielder = "";
-
-  if (run === "Caught") {
-    fielder = bowlingTeam[Math.floor(Math.random() * bowlingTeam.length)];
-  }
+  let fielder = bowlingTeam[Math.floor(Math.random() * bowlingTeam.length)];
 
   let playerEntry = {
     ...selectedPlayer,
@@ -19,7 +15,7 @@ export default function updateBatsman(run, selectedPlayer, battingCard, bowler, 
     totalDeliveries: totalDeliveries,
     strikeRate: strikeRate,
     bowler,
-    fielder,
+    fielder: run === "Caught" ? fielder : "",
     fours: selectedPlayer.runs.filter((run) => run === 4).length,
     sixes: selectedPlayer.runs.filter((run) => run === 6).length,
   };
