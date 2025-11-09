@@ -16,9 +16,9 @@ export const ScoreCard = () => {
     <div>
       <h2>Scorecard</h2>
 
-      <details style={{ fontSize: "0.8em", }}>
+      <div style={{ fontSize: "0.8em", }}>
 
-        <summary style={{ cursor: "pointer", listStyle: "none", textAlign: "left", fontSize: "1.5em", backgroundColor: "grey", padding: "0.35em 0.7em", borderRadius: "1em", fontWeight: "bold", }}>Innings One</summary>
+        <p style={{ cursor: "pointer", listStyle: "none", textAlign: "left", fontSize: "1.5em", backgroundColor: "grey", padding: "0.35em 0.7em", borderRadius: "1em", fontWeight: "bold", }}>Innings One</p>
 
         <h2 style={{ textAlignLast: "left" }}>Batting Scorecard</h2>
 
@@ -82,7 +82,7 @@ export const ScoreCard = () => {
           }
         </div>
 
-      </details>
+      </div>
 
     </div>
   )
