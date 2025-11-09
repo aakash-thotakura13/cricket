@@ -182,9 +182,9 @@ export const Pitch = ({
 
         setPartnerOne(playerEntry);
         const updatePartnership = {
-          playerOne: _partnerOne,
+          playerOne: playerEntry,
           playerTwo: _partnerTwo,
-        }
+        };
 
         setActivePartnership(updatePartnership);
 
@@ -198,8 +198,8 @@ export const Pitch = ({
         setPartnerTwo(playerEntry);
         const updatePartnership = {
           playerOne: _partnerOne,
-          playerTwo: _partnerTwo,
-        }
+          playerTwo: playerEntry,
+        };
 
         setActivePartnership(updatePartnership);
 
@@ -207,7 +207,6 @@ export const Pitch = ({
     }
   };
 
-  console.log(_partnerOne, _partnerTwo)
 
 
   return (
