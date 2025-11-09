@@ -7,38 +7,52 @@ export function addBatsman(
   setPartnerOne,
   setPartnerTwo,
   battingCard,
-  setBattingCard
+  setBattingCard,
+  outPlayer,
 ) {
-  const isEmpty = (p) => !p || Object.keys(p).length === 0;
 
-  // 🧩 1️⃣ Check if player already exists in batting card
+  const isEmpty = p => !p || Object.keys(p).length === 0;
+
   const alreadyExists = battingCard.some((p) => p.playerName === player);
   if (alreadyExists) {
     alert(`${player} is already in the batting card`);
     return;
-  }
+  };
 
-  // 🧩 2️⃣ Check if both batsmen are already selected
-  if (!isEmpty(_playerOne) && !isEmpty(_playerTwo)) {
-    alert("Both batsmen are already selected");
-    return;
-  }
+  const playerEntry = { playerName: player, runs: [], };
 
-  // 🧩 3️⃣ Create player entry
-  const playerEntry = { playerName: player, runs: [] };
-
-  // 🧩 4️⃣ Assign to available slot
-  if (isEmpty(_playerOne)) {
+  if (outPlayer === "playerOne") {
+    console.log("setting up playerOne,", outPlayer)
     setPlayerOne(playerEntry);
     setPartnerOne(playerEntry);
-  } else {
+
+  } else if (outPlayer === "playerTwo") {
+    console.log("setting up playerTwo,", outPlayer)
     setPlayerTwo(playerEntry);
     setPartnerTwo(playerEntry);
+
+  } else {
+
+    if (isEmpty(_playerOne)) {
+      console.log("isEmpty playerOne,", outPlayer)
+      setPlayerOne(playerEntry);
+      setPartnerOne(playerEntry);
+
+    } else if (isEmpty(_playerTwo)) {
+      console.log("isEmpty playerTwo,", outPlayer)
+      setPlayerTwo(playerEntry);
+      setPartnerTwo(playerEntry);
+
+    } else {
+
+      alert("Both batsman are already selected")
+      return;
+
+    }
   }
 
-  // 🧩 5️⃣ Add to batting card
   setBattingCard((prev) => [...prev, playerEntry]);
-}
+};
 
 export function addBowler(player, setBowler, bowlingCard, setBowlingCard) {
   const findBowler = bowlingCard.find((bowler) => bowler.playerName === player);
