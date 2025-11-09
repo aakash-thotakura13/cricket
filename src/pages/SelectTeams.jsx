@@ -44,7 +44,7 @@ export const SelectTeam = () => {
   };
 
   return (
-    <section>
+    <section style={{fontSize:"0.95em"}}>
 
       {
         !game

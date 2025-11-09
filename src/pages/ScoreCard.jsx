@@ -14,15 +14,15 @@ export const ScoreCard = () => {
 
   return (
     <div>
-      <h1>Scorecard</h1>
+      <h2>Scorecard</h2>
 
-      <details>
+      <details style={{ fontSize: "0.8em", }}>
 
         <summary style={{ cursor: "pointer", listStyle: "none", textAlign: "left", fontSize: "1.5em", backgroundColor: "grey", padding: "0.35em 0.7em", borderRadius: "1em", fontWeight: "bold", }}>Innings One</summary>
 
         <h2 style={{ textAlignLast: "left" }}>Batting Scorecard</h2>
 
-        <div style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", fontSize: "0.9em", borderBottom:"3px solid whitesmoke", }}>
+        <div style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", borderBottom: "3px solid whitesmoke", }}>
           <span style={{ margin: "2px 0px", textAlign: "left" }}>Player</span>
           <span style={{ margin: "2px 0px", }}>Runs</span>
           <span style={{ margin: "2px 0px", }}>4s</span>
@@ -33,22 +33,21 @@ export const ScoreCard = () => {
         <div>
           {
             _inningsOneBattingScoreCard?.map((player, id) =>
-              <div key={id} style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", fontSize: "0.9em", borderBottom:"1px solid whitesmoke", }}>
-                <span style={{ margin: "2px 0px", textAlign: "left", }}>{player.playerName}</span>
-                <span style={{ margin: "2px 0px", textAlign: "right", }}>{player.totalRuns} ({player.runs.length})</span>
-                <span style={{ margin: "2px 0px", textAlign: "center", }}>{player.fours}</span>
-                <span style={{ margin: "2px 0px", textAlign: "center", }}>{player.sixes}</span>
-                <span style={{ margin: "2px 0px", textAlign: "center", }}>{player.strikeRate}</span>
+              <div key={id} style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", fontSize: "0.9em", borderBottom: "1px solid whitesmoke", }}>
+                <span style={{ margin: "0.7em 0em", textAlign: "left", }}>{player.playerName}</span>
+                <span style={{ margin: "0.7em 0em", textAlign: "right", }}>{player.totalRuns} ({player.runs.length})</span>
+                <span style={{ margin: "0.7em 0em", textAlign: "center", }}>{player.fours}</span>
+                <span style={{ margin: "0.7em 0em", textAlign: "center", }}>{player.sixes}</span>
+                <span style={{ margin: "0.7em 0em", textAlign: "center", }}>{player.strikeRate}</span>
               </div>
             )
           }
         </div>
 
 
-
         <h2 style={{ textAlignLast: "left" }}>Bowling Scorecard</h2>
 
-        <div style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr", fontSize: "0.9em", borderBottom:"3px solid whitesmoke", }}>
+        <div style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr", borderBottom: "3px solid whitesmoke", }}>
           <span style={{ margin: "2px 0px", textAlign: "left" }}>Player</span>
           <span style={{ margin: "2px 0px", }}>O</span>
           <span style={{ margin: "2px 0px", }}>R</span>
@@ -69,13 +68,13 @@ export const ScoreCard = () => {
               const economy = (runsConceded / oversCount).toFixed(2);
 
               return (
-                <div key={id} style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr", fontSize: "0.9em", borderBottom:"1px solid whitesmoke", }}>
-                  <span style={{ margin: "2px 0px", textAlign: "left" }}>{player.playerName}</span>
-                  <span style={{ margin: "2px 0px", textAlign: "center" }}>{oversCount}.{remainingBalls}</span>
-                  <span style={{ margin: "2px 0px", textAlign: "center" }}>{runsConceded}</span>
-                  <span style={{ margin: "2px 0px", textAlign: "center" }}>{wickets}</span>
-                  <span style={{ margin: "2px 0px", textAlign: "center" }}>{wickets}</span>
-                  <span style={{ margin: "2px 0px", textAlign: "center" }}>{economy}</span>
+                <div key={id} style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr", fontSize: "0.9em", borderBottom: "1px solid whitesmoke", }}>
+                  <span style={{ margin: "0.7em 0em", textAlign: "left" }}>{player.playerName}</span>
+                  <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{oversCount}.{remainingBalls}</span>
+                  <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{runsConceded}</span>
+                  <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{wickets}</span>
+                  <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{wickets}</span>
+                  <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{economy}</span>
                 </div>
               )
             }
