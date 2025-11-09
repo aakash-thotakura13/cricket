@@ -3,6 +3,7 @@ import App from "../App";
 import { SelectTeam } from "../pages/SelectTeams";
 import { ScoreCard } from "../pages/ScoreCard";
 import { OverDetails } from "../pages/OverDetails";
+import { Partnerships } from "../pages/Partnerships";
 
 
 export const allRoutes = createBrowserRouter([
@@ -20,7 +21,7 @@ export const allRoutes = createBrowserRouter([
       },
       {
         path: "/partnership",
-        element: <>Partnerships</>
+        element: <Partnerships />
       },
       {
         path: "/overs",
