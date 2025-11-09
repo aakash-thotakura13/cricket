@@ -1,7 +1,7 @@
 
 import { useAtom } from "jotai";
 
-import { bowler, onStrike, overRuns, partnerOne, partnerTwo, playerOne, playerTwo, prevBowler, run, } from "../jotai/atom";
+import { activePartnership, bowler, onStrike, overRuns, partnerOne, partnerTwo, playerOne, playerTwo, prevBowler, run, } from "../jotai/atom";
 import { ScoreBar } from "./ScoreBar";
 
 import addRuns from "../function/addRuns"
@@ -9,7 +9,8 @@ import { addBatsman, addBowler } from "../function/addPlayers";
 import generateRuns from "../function/generateRuns";
 import { useCallback, useEffect } from "react";
 import wicketsCounter from "../function/wicketsCounter";
-import updateBowler from "../function/updatePlayer";
+import updateBowler from "../function/updateBowler";
+import updateBatsman from "../function/updateBatsman";
 
 
 export const Pitch = ({
@@ -33,13 +34,27 @@ export const Pitch = ({
   const [_run, setRun] = useAtom(run);
   const [_overRuns, setOverRuns] = useAtom(overRuns);
   const [_onStrike, setOnStrike] = useAtom(onStrike);
+  const [_activePartnership, setActivePartnership] = useAtom(activePartnership);
 
 
   const overUp = useCallback(() => {
+
+    const eachOver = {
+      playerOne: _playerOne,
+      playerTwo: _playerTwo,
+      bowler: _bowler,
+      overRuns: _overRuns,
+    };
+
+    setAllOvers([...allOvers, eachOver]);
+
     setOverRuns([]);
-    setPrevBowler(prev => _bowler);
     setBowler({});
+    setPrevBowler(prev => _bowler);
+    setOnStrike(!_onStrike);
+
   }, [_bowler]);
+
 
   useEffect(() => {
     if (_overRuns.length > 5 && _overRuns.length === 6) {
@@ -160,91 +175,62 @@ export const Pitch = ({
 
       if (_onStrike) {
 
-        let runs = [..._playerOne.runs, run];
-        let totalRuns = addRuns(runs);
-        let totalDeliveries = runs.length;
-        let strikeRate = (totalRuns * 100 / totalDeliveries).toFixed(2);
-
-        const playerEntry = {
-          ..._playerOne,
-          runs,
-          totalRuns,
-          totalDeliveries,
-          strikeRate,
-          fours: _playerOne.runs.filter(run => run === 4).length,
-          sixes: _playerOne.runs.filter(run => run === 6).length
-        };
-
-        console.log("_playerOne", playerEntry)
+        const { playerEntry, updatedArray } = updateBatsman(run, _playerOne, battingCard,);
 
         setPlayerOne(playerEntry);
-        setPartnerOne(playerEntry);
-
-        const findPlayer = battingCard.findIndex(player => player.playerName === _playerOne.playerName);
-        const updatedArray = battingCard.map((player, index) => index === findPlayer ? playerEntry : player);
         setBattingCard(updatedArray);
 
-        const eachOver = {
-          playerOne: playerEntry,
-          playerTwo: _playerTwo,
-          bowler: bowlerEntry,
-          overRuns,
-        };
+        setPartnerOne(playerEntry);
+        const updatePartnership = {
+          playerOne: _partnerOne,
+          playerTwo: _partnerTwo,
+        }
 
-        setAllOvers([...allOvers, eachOver]);
+        setActivePartnership(updatePartnership);
 
       } else {
 
-        let runs = [..._playerTwo.runs, run];
-        let totalRuns = addRuns(runs);
-        let totalDeliveries = runs.length;
-        let strikeRate = (totalRuns * 100 / totalDeliveries).toFixed(2);
-
-        const playerEntry = {
-          ..._playerTwo,
-          runs,
-          totalRuns,
-          totalDeliveries,
-          strikeRate,
-          fours: _playerTwo.runs.filter(run => run === 4).length,
-          sixes: _playerTwo.runs.filter(run => run === 6).length
-        };
-
-        console.log("_playerTwo", playerEntry)
+        const { playerEntry, updatedArray } = updateBatsman(run, _playerTwo, battingCard,);
 
         setPlayerTwo(playerEntry);
-        setPartnerTwo(playerEntry);
-
-        const findPlayer = battingCard.findIndex(player => player.playerName === _playerTwo.playerName);
-
-        const updatedArray = battingCard.map((player, index) => index === findPlayer ? playerEntry : player);
         setBattingCard(updatedArray);
 
-        const eachOver = {
-          playerOne: _playerOne,
-          playerTwo: playerEntry,
-          bowler: bowlerEntry,
-          overRuns,
-        };
+        setPartnerTwo(playerEntry);
+        const updatePartnership = {
+          playerOne: _partnerOne,
+          playerTwo: _partnerTwo,
+        }
 
-        setAllOvers([...allOvers, eachOver]);
+        setActivePartnership(updatePartnership);
 
       }
     }
-
-
   };
+
+  console.log(_partnerOne, _partnerTwo)
 
 
   return (
-    <>
+    <div style={{ width: "100%", margin: "auto" }}>
 
-      <ScoreBar team={battingTeam} allOvers={allOvers} />
+      <ScoreBar team={battingTeam} allOvers={allOvers} activeOver={_overRuns} />
 
       <div>
         {
           Object.keys(_playerOne).length > 0 && Object.keys(_playerTwo).length > 0
-            ? <div onClick={() => game()} style={{ width: "350px", margin: "0em auto 1em", aspectRatio: "1.35/1", backgroundColor: "green", borderRadius: "45%", display: "flex", flexDirection: "column", justifyContent: "space-between", }}>
+            ? <div
+              onClick={() => game()}
+              style={{
+                width: "350px",
+                padding: "0.5em 0.25em",
+                margin: "0em auto",
+                aspectRatio: "1.35/1",
+                backgroundColor: "green",
+                borderRadius: "45%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}>
 
               <p style={{ padding: "0em", }}>
                 {
@@ -261,9 +247,22 @@ export const Pitch = ({
               </p>
 
               <div>
-                <p style={{ fontSize: "2.7em", margin: "0em", padding: "0em", }}>{_run}</p>
+                <p style={{ fontSize: "2.7em", margin: "0em", padding: "0em", }}>
+                  <span>{_run}</span>
+                  <span style={{ fontSize: "0.5em", marginLeft: "0.25em" }}>
+                    {
+                      _overRuns.length > 0
+                        ? addRuns(_overRuns)
+                        : allOvers.length > 0 && addRuns(allOvers.at(-1).overRuns)
+                    }
+                  </span>
+                </p>
                 <hr style={{ width: "80%", margin: "auto", padding: "0em", }} />
-                {_overRuns?.map((run, id) => <span key={id}>{run}, </span>)}
+                {
+                  _overRuns.length > 0
+                    ? _overRuns.map((run, id) => <span key={id}>{run}, </span>)
+                    : allOvers.length > 0 && allOvers.at(-1).overRuns.map((run, id) => <span key={id}>{run}, </span>)
+                }
               </div>
 
               <p style={{ padding: "0em", }}>
@@ -348,6 +347,6 @@ export const Pitch = ({
         }
       </div>
 
-    </>
+    </div>
   )
 }
