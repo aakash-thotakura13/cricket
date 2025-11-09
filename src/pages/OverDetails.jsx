@@ -24,7 +24,7 @@ export const OverDetails = () => {
 
               <summary style={{ margin: "0em 0em", padding: "0.7em 1.4em 0.7em 0.7em", display: "grid", gridTemplateColumns: "1fr 3fr 1fr", alignItems: "center", gap: "1em", }}>
 
-                <p style={{ fontSize: "3em", backgroundColor: "#ccc", color: "black", borderRadius: "50%", }}>{id + 1}</p>
+                <p style={{ width: "60px", height: "60px", display: "flex", placeContent: "center", placeItems: "center", fontSize: "3em", backgroundColor: "#ccc", color: "black", borderRadius: "50%", }}>{id + 1}</p>
 
                 <div>
 
@@ -51,11 +51,11 @@ export const OverDetails = () => {
 
               <hr style={{ width: "90%", margin: "auto" }} />
 
-              <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+              <div style={{ display: "flex", justifyContent: "space-evenly", margin: "0.5em 0em", }}>
                 {
                   entry.overRuns.map((run, id) => {
                     return (
-                      <span key={id} style={{ width: "40px", margin: "0.5em", aspectRatio: "1.2/1", fontSize: "1.7em", backgroundColor: "#ccc", color: "black", borderRadius: "50%", }} >{run}</span>
+                      <span key={id} style={{ width: "30px", height: "30px", fontSize: "1.7em", backgroundColor: "#ccc", color: "black", borderRadius: "50%", }} >{run}</span>
                     )
                   })
                 }
