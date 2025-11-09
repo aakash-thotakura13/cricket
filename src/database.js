@@ -1,14 +1,15 @@
 export const indianW = {
   teamName: "India 2025 (W)",
   tag: "INDW",
+  wicketKeeper: "Richa Ghosh (wk)",
   teamMembers: [
     "Smriti Mandhana",
     "Shafali Verma",
     "Jemimah Rodrigues",
-    "Harmanpreet Kaur (C)",
+    "Harmanpreet Kaur (c)",
     "Deepti Sharma",
     "Amanjot Kaur",
-    "Richa Ghosh (Wk)",
+    "Richa Ghosh (wk)",
     "Radha Yadav",
     "Kranti Goud",
     "Nallapureddy Charani",
@@ -19,13 +20,14 @@ export const indianW = {
 export const southAfricaW = {
   teamName: "South Africa 2025 (W)",
   tag: "SAW",
+  wicketKeeper: "Sinalo Jafta (wk)",
   teamMembers: [
-    "Laura Wolvaardt (C)",
+    "Laura Wolvaardt (c)",
     "Tazmin Brits",
     "Anneke Bosch",
     "Suné Luus",
     "Marizanne Kapp",
-    "Sinalo Jafta (Wk)",
+    "Sinalo Jafta (wk)",
     "Annerie Dercksen",
     "Chloe Tryon",
     "Nadine de Klerk",
@@ -37,12 +39,13 @@ export const southAfricaW = {
 export const australia2025 = {
   teamName: "Austraila 2025",
   tag: "AUS25",
+  wicketKeeper: "Alex Carey (wk)",
   teamMembers: [
-    "Mitchell Marsh(c)",
+    "Mitchell Marsh (c)",
     "Travis Head",
     "Matthew Short",
     "Matt Renshaw",
-    "Alex Carey(wk)",
+    "Alex Carey (wk)",
     "Cooper Connolly",
     "Mitchell Owen",
     "Mitchell Starc",
@@ -55,6 +58,7 @@ export const australia2025 = {
 export const india2025 = {
   teamName: "India 2025",
   tag: "IND25",
+  wicketKeeper: "KL Rahul (wk)",
   teamMembers: [
     "Rohit Sharma",
     "Shubman Gill (c)",
