@@ -84,14 +84,14 @@ export const Pitch = ({
 
     if (typeof run === "string") {
 
-      console.log("Wicket! onStrike:", _onStrike ? "playerOne" : "playerTwo");
+      // console.log("Wicket! onStrike:", _onStrike ? "playerOne" : "playerTwo");
 
       if (_onStrike) {
 
-        alert(`${_playerOne.playerName} is out`);
+        alert(`${_playerOne.playerName} is ${run}`);
         outPlayer.current = "playerOne";
 
-        const { playerEntry, updatedArray } = updateBatsman(run, _playerOne, battingCard, _bowler.playerName, bowlingTeam);
+        const { playerEntry, updatedArray } = updateBatsman(run, _playerOne, battingCard, _bowler.playerName, bowlingTeam,);
 
         setBattingCard(updatedArray);
 
@@ -108,10 +108,10 @@ export const Pitch = ({
 
       } else {
 
-        alert(`${_playerTwo.playerName} is out`);
+        alert(`${_playerTwo.playerName} is ${run}`);
         outPlayer.current = "playerTwo";
 
-        const { playerEntry, updatedArray } = updateBatsman(run, _playerTwo, battingCard, _bowler.playerName, bowlingTeam);
+        const { playerEntry, updatedArray } = updateBatsman(run, _playerTwo, battingCard, _bowler.playerName, bowlingTeam,);
 
         setBattingCard(updatedArray);
 
@@ -136,7 +136,7 @@ export const Pitch = ({
 
       if (_onStrike) {
 
-        const { playerEntry, updatedArray } = updateBatsman(run, _playerOne, battingCard, null, bowlingTeam);
+        const { playerEntry, updatedArray } = updateBatsman(run, _playerOne, battingCard, null, bowlingTeam,);
 
         setPlayerOne(playerEntry);
         setBattingCard(updatedArray);
@@ -151,7 +151,7 @@ export const Pitch = ({
 
       } else {
 
-        const { playerEntry, updatedArray } = updateBatsman(run, _playerTwo, battingCard, null, bowlingTeam);
+        const { playerEntry, updatedArray } = updateBatsman(run, _playerTwo, battingCard, null, bowlingTeam,);
 
         setPlayerTwo(playerEntry);
         setBattingCard(updatedArray);
@@ -273,11 +273,11 @@ export const Pitch = ({
             <>
               <p style={{ display: "flex", justifyContent: "space-between", margin: "0.25em 0em", }}>
                 <span>{_bowler.playerName}</span>
-                <span>{addRuns(_bowler?.runs)} / {wicketsCounter(_bowler?.runs)}</span>
+                <span>{addRuns(_bowler?.runs)}/{wicketsCounter(_bowler?.runs)} ({Math.trunc(_bowler?.runs?.length / 6)}.{_bowler?.runs?.length % 6}) </span>
               </p>
               <p style={{ display: "flex", justifyContent: "space-between", margin: "0.25em 0em", }}>
                 <span>{_prevBowler.playerName}</span>
-                <span>{addRuns(_prevBowler?.runs)} / {wicketsCounter(_prevBowler?.runs)}</span>
+                <span>{addRuns(_prevBowler?.runs)}/{wicketsCounter(_prevBowler?.runs)} ({Math.trunc(_prevBowler?.runs?.length / 6)}.{_prevBowler?.runs?.length%6}) </span>
               </p>
             </>
             :
