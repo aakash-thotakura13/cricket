@@ -17,6 +17,11 @@
 }
 
 ul,
-li {
+li,
+summary {
   list-style: none;
+}
+
+details, summary {
+  cursor: pointer;
 }
