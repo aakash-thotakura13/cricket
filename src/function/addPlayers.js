@@ -22,24 +22,24 @@ export function addBatsman(
   const playerEntry = { playerName: player, runs: [], };
 
   if (outPlayer === "playerOne") {
-    console.log("setting up playerOne,", outPlayer)
+    
     setPlayerOne(playerEntry);
     setPartnerOne(playerEntry);
 
   } else if (outPlayer === "playerTwo") {
-    console.log("setting up playerTwo,", outPlayer)
+    
     setPlayerTwo(playerEntry);
     setPartnerTwo(playerEntry);
 
   } else {
 
     if (isEmpty(_playerOne)) {
-      console.log("isEmpty playerOne,", outPlayer)
+      
       setPlayerOne(playerEntry);
       setPartnerOne(playerEntry);
 
     } else if (isEmpty(_playerTwo)) {
-      console.log("isEmpty playerTwo,", outPlayer)
+      
       setPlayerTwo(playerEntry);
       setPartnerTwo(playerEntry);
 
@@ -55,16 +55,23 @@ export function addBatsman(
 };
 
 export function addBowler(player, setBowler, bowlingCard, setBowlingCard) {
+
   const findBowler = bowlingCard.find((bowler) => bowler.playerName === player);
 
   if (findBowler) {
+
     setBowler(findBowler);
+
   } else {
+
     const newBowler = {
       playerName: player,
       runs: [],
+      bowlerOvers: [],
     };
+
     setBowler(newBowler);
     setBowlingCard([...bowlingCard, newBowler]);
+
   }
 }
