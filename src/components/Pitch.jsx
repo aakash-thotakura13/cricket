@@ -9,7 +9,7 @@ import { addBatsman, addBowler } from "../function/addPlayers";
 import generateRuns from "../function/generateRuns";
 import { useCallback, useEffect, useRef } from "react";
 import wicketsCounter from "../function/wicketsCounter";
-import updateBowler from "../function/updateBowler";
+import { updateBowler, updateOver } from "../function/updateBowler";
 import updateBatsman from "../function/updateBatsman";
 
 
@@ -38,6 +38,9 @@ export const Pitch = ({
   const outPlayer = useRef(null);
 
 
+  console.log(bowlingCard.map(entry => entry.maidens))
+
+
   const overUp = useCallback(() => {
 
     const eachOver = {
@@ -59,8 +62,12 @@ export const Pitch = ({
 
   useEffect(() => {
     if (_overRuns.length > 5 && _overRuns.length === 6) {
+
+      const updatedArray = updateOver(_bowler, bowlingCard, _overRuns,);
+      setBowlingCard(updatedArray);
+
       overUp();
-    }
+    };
   }, [_overRuns, overUp]);
 
 
@@ -277,7 +284,7 @@ export const Pitch = ({
               </p>
               <p style={{ display: "flex", justifyContent: "space-between", margin: "0.25em 0em", }}>
                 <span>{_prevBowler.playerName}</span>
-                <span>{addRuns(_prevBowler?.runs)}/{wicketsCounter(_prevBowler?.runs)} ({Math.trunc(_prevBowler?.runs?.length / 6)}.{_prevBowler?.runs?.length%6}) </span>
+                <span>{addRuns(_prevBowler?.runs)}/{wicketsCounter(_prevBowler?.runs)} ({Math.trunc(_prevBowler?.runs?.length / 6)}.{_prevBowler?.runs?.length % 6}) </span>
               </p>
             </>
             :

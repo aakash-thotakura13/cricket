@@ -81,7 +81,7 @@ export const ScoreCard = () => {
                   <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{oversCount}.{remainingBalls}</span>
                   <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{runsConceded}</span>
                   <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{wickets}</span>
-                  <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{wickets}</span>
+                  <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{player.maidens}</span>
                   <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{economy}</span>
                 </div>
               )
