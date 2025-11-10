@@ -50,7 +50,7 @@ export const SelectTeam = () => {
       {
         !game
           ? <>
-            <p>Select Teams</p>
+            <h2>Select Teams</h2>
             {
               (Object.keys(_teamOne).length > 0 && Object.keys(_teamTwo).length > 0)
                 ? <>
