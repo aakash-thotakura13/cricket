@@ -38,7 +38,7 @@ export const Pitch = ({
   const outPlayer = useRef(null);
 
 
-  console.log(bowlingCard.map(entry => entry.maidens))
+  console.log(battingCard.map(entry => entry.playerName));
 
 
   const overUp = useCallback(() => {
@@ -253,7 +253,9 @@ export const Pitch = ({
                     <li
                       key={id}
                       style={{
-                        backgroundColor: player === _playerOne.playerName || player === _playerTwo.playerName ? "grey" : "",
+                        backgroundColor: battingCard.some(playerEntry => playerEntry.playerName === player) ? "#ccc" : "",
+                        color: battingCard.some(playerEntry => playerEntry.playerName === player) ? "black" : "",
+                        fontWeight: "400",
                         border: "2px solid #ccc",
                         borderRadius: "1em",
                         cursor: "pointer",
