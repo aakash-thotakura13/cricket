@@ -8,9 +8,10 @@ export const ScoreCard = () => {
   const [_inningsOneBattingScoreCard, setInningsOneBattingScoreCard] = useAtom(inningsOneBattingScoreCard);
   const [_inningsOneBowlingScoreCard, setInningsOneBowlingScoreCard] = useAtom(inningsOneBowlingScoreCard);
 
-  console.clear();
-  console.table(_inningsOneBattingScoreCard);
-  console.table(_inningsOneBowlingScoreCard);
+  // console.clear();
+  // console.log(..._inningsOneBattingScoreCard);
+  // console.log(..._inningsOneBowlingScoreCard);
+
 
   return (
     <div>
@@ -32,14 +33,21 @@ export const ScoreCard = () => {
 
         <div>
           {
-            _inningsOneBattingScoreCard?.map((player, id) =>
-              <div key={id} style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", fontSize: "0.9em", borderBottom: "1px solid whitesmoke", }}>
-                <span style={{ margin: "0.7em 0em", textAlign: "left", }}>{player.playerName}</span>
-                <span style={{ margin: "0.7em 0em", textAlign: "right", }}>{player.totalRuns} ({player.runs.length})</span>
-                <span style={{ margin: "0.7em 0em", textAlign: "center", }}>{player.fours}</span>
-                <span style={{ margin: "0.7em 0em", textAlign: "center", }}>{player.sixes}</span>
-                <span style={{ margin: "0.7em 0em", textAlign: "center", }}>{player.strikeRate}</span>
-              </div>
+            _inningsOneBattingScoreCard?.map((player, id) => {
+
+              return (
+                <div key={id} style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", fontSize: "0.9em", borderBottom: "1px solid whitesmoke", }}>
+                  <details style={{ margin: "0.7em 0em", textAlign: "left", }}>
+                    <summary>{player.playerName}</summary>
+                    <p>{player.bowler}</p>
+                  </details>
+                  <span style={{ margin: "0.7em 0em", textAlign: "right", }}>{player.totalRuns} ({player.runs.length})</span>
+                  <span style={{ margin: "0.7em 0em", textAlign: "center", }}>{player.fours}</span>
+                  <span style={{ margin: "0.7em 0em", textAlign: "center", }}>{player.sixes}</span>
+                  <span style={{ margin: "0.7em 0em", textAlign: "center", }}>{player.strikeRate}</span>
+                </div>
+              )
+            }
             )
           }
         </div>
@@ -61,8 +69,8 @@ export const ScoreCard = () => {
             _inningsOneBowlingScoreCard?.map((player, id) => {
 
               const ballsDelivered = player.runs.length;
-              const oversCount = ballsDelivered / 6;
-              const remainingBalls = ballsDelivered - (oversCount * 6);
+              const oversCount = `${Math.trunc(ballsDelivered / 6)}`;
+              const remainingBalls = ballsDelivered - (oversCount * 6)
               const runsConceded = addRuns(player.runs);
               const wickets = player.runs.filter(run => typeof run === "string").length;
               const economy = (runsConceded / oversCount).toFixed(2);
