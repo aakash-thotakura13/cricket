@@ -38,9 +38,6 @@ export const Pitch = ({
   const outPlayer = useRef(null);
 
 
-  console.log(battingCard.map(entry => entry.playerName));
-
-
   const overUp = useCallback(() => {
 
     const eachOver = {

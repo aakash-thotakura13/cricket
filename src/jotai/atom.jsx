@@ -32,5 +32,3 @@ export const activePartnership = atom([]);
 
 export const inningsOneAllOvers = atom([]);
 export const inningsTwoAllOvers = atom([]);
-
-
