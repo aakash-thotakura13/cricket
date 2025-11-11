@@ -19,8 +19,11 @@ export const OverDetails = () => {
 
       {
         _inningsOneAllOvers.map((entry, id) => {
+
+          const hasStringRun = entry.overRuns.some(run => typeof run === "string");
+
           return (
-            <details key={id} style={{ padding: "0em", margin: "0.5em 0em", border: "0.1em solid whitesmoke", borderRadius: "2.5em", }}>
+            <details key={id} style={{ padding: "0em", margin: "0.5em 0em", border: hasStringRun ? "0.1em solid red" : "1px solid #ccc", borderRadius: "2.5em", }} open={hasStringRun}>
 
               <summary style={{ margin: "0em 0em", padding: "0.7em 1.4em 0.7em 0.7em", display: "grid", gridTemplateColumns: "1fr 3fr 1fr", alignItems: "center", gap: "1em", }}>
 
@@ -55,7 +58,9 @@ export const OverDetails = () => {
                 {
                   entry.overRuns.map((run, id) => {
                     return (
-                      <span key={id} style={{ width: "30px", height: "30px", fontSize: "1.7em", backgroundColor: "#ccc", color: "black", borderRadius: "50%", }} >{run}</span>
+                      <span key={id} style={{ width: "30px", height: "30px", fontSize: "1.7em", backgroundColor: "#ccc", color: "black", borderRadius: "50%", }} >
+                        {typeof run === "string" ? "W" : run}
+                      </span>
                     )
                   })
                 }
