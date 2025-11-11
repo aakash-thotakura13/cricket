@@ -8,9 +8,6 @@ export function Partnerships() {
   const [_activePartnership, setActivePartnership] = useAtom(activePartnership);
   const [_inningsOnePartnershipCard, setInningsOnePartnershipCard] = useAtom(inningsOnePartnershipCard);
   const [_inningsTwoPartnershipCard, setInningsTwoPartnershipCard] = useAtom(inningsTwoPartnershipCard);
-  // console.clear();
-  // console.log(_inningsOnePartnershipCard[0]);
-  // console.log(_activePartnership)
 
   return (
     <div>
@@ -33,8 +30,8 @@ function AllPartnerships({ partnerships }) {
 
   return (
     <div style={{ margin: "1em 0em", }}>
-      {partnerships.map((singlePartnership, index) => (
-        <ActivePartnership key={index} singlePartnership={singlePartnership} />
+      {partnerships.map((singlePartnership, id) => (
+        <ActivePartnership key={id} singlePartnership={singlePartnership} />
       ))}
     </div>
   )
@@ -43,11 +40,18 @@ function AllPartnerships({ partnerships }) {
 
 function ActivePartnership({ singlePartnership }) {
 
-  const totalRuns = addRuns([singlePartnership?.playerOne?.runs, singlePartnership?.playerTwo?.runs].flat());
-  const totalDeliveries = singlePartnership?.playerOne?.totalDeliveries + singlePartnership?.playerTwo?.totalDeliveries;
+  const partnerOneName = singlePartnership?.partnerOne?.playerName;
+  const partnerOneRuns = addRuns(singlePartnership?.partnerOne?.runs) || 0;
+  const partnerOneTotalDeliveries = singlePartnership?.partnerOne?.runs?.length || 0;
+
+  const partnerTwoName = singlePartnership?.partnerTwo?.playerName;
+  const partnerTwoRuns = addRuns(singlePartnership?.partnerTwo?.runs) || 0;
+  const partnerTwoTotalDeliveries = singlePartnership?.partnerTwo?.runs?.length || 0;
+
+  const totalRuns = partnerOneRuns + partnerTwoRuns;
+  const totalDeliveries = partnerOneTotalDeliveries + partnerTwoTotalDeliveries;
   const strikeRate = ((totalRuns / totalDeliveries) * 100).toFixed(2);
 
-  console.log(singlePartnership);
 
   return (
     <div style={{ fontSize: "0.85em", margin: "1em 0em", }}>
@@ -55,8 +59,8 @@ function ActivePartnership({ singlePartnership }) {
       <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 1.5fr", }}>
 
         <div style={{ textAlign: "left", }}>
-          <p>{singlePartnership?.playerOne?.playerName}</p>
-          <p>{singlePartnership?.playerOne?.totalRuns} ({singlePartnership?.playerOne?.totalDeliveries})</p>
+          <p>{partnerOneName}</p>
+          <p>{partnerOneRuns} ({partnerOneTotalDeliveries})</p>
         </div>
 
         <div style={{ backgroundColor: "#ccc", color: "black", padding: "0em", borderRadius: "1em", width: "100px", aspectRatio: "1.2/1", placeContent: "center", placeItems: "center", }}>
@@ -65,8 +69,8 @@ function ActivePartnership({ singlePartnership }) {
         </div>
 
         <div style={{ textAlign: "right", }}>
-          <p>{singlePartnership?.playerTwo?.playerName}</p>
-          <p>{singlePartnership?.playerTwo?.totalRuns} ({singlePartnership?.playerTwo?.totalDeliveries})</p>
+          <p>{partnerTwoName}</p>
+          <p>{partnerTwoRuns} ({partnerTwoTotalDeliveries})</p>
         </div>
 
       </div>
