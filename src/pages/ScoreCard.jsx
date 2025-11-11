@@ -36,10 +36,10 @@ export const ScoreCard = () => {
             _inningsOneBattingScoreCard?.map((player, id) => {
 
               return (
-                <div key={id} style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", fontSize: "0.9em", borderBottom: "1px solid whitesmoke", }}>
-                  <details style={{ margin: "0.7em 0em", textAlign: "left", }}>
-                    <summary>{player.playerName}</summary>
-                    <p>{player.bowler}</p>
+                <div key={id} style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", fontSize: "0.9em", borderBottom: "1px solid whitesmoke", alignItems:"center"}}>
+                  <details style={{ margin: "0.7em 0em", textAlign: "left", }} open={player.bowler==="not out" ? false : true}>
+                    <summary>{player.playerName} {player.bowler==="not out" ? <strong>*</strong> : ""}</summary>
+                    <p style={{ color: "#ccc", fontSize: "0.9em", }}>{player.bowler}</p>
                   </details>
                   <span style={{ margin: "0.7em 0em", textAlign: "right", }}>{player.totalRuns} ({player.runs.length})</span>
                   <span style={{ margin: "0.7em 0em", textAlign: "center", }}>{player.fours}</span>
