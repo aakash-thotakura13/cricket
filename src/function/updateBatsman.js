@@ -1,23 +1,33 @@
 import addRuns from "./addRuns";
 
-export default function updateBatsman(run, selectedPlayer, battingCard, bowler, bowlingTeam) {
-
+export default function updateBatsman(
+  run,
+  selectedPlayer,
+  battingCard,
+  bowler,
+  bowlingTeam
+) {
   let runs = [...selectedPlayer.runs, run];
   let totalRuns = addRuns(runs);
   let totalDeliveries = runs.length;
-  let strikeRate = ((totalRuns * 100) / totalDeliveries).toFixed(2);
-  let fielder = bowlingTeam.teamMembers[Math.floor(Math.random() * bowlingTeam.teamMembers.length)];
-  // let batsmenStatus = bowler !== "OUT" ? "NOT OUT" : "OUT";
-  // Bowled or LBW
+  let strikeRate =
+    totalDeliveries > 0
+      ? ((totalRuns * 100) / totalDeliveries).toFixed(2)
+      : 0.0;
+  let fielder =
+    bowlingTeam.teamMembers[
+      Math.floor(Math.random() * bowlingTeam.teamMembers.length)
+    ];
+
   const wicketFormats = {
     LBW: () => `lbw b ${bowler}`,
     Bowled: () => `b ${bowler}`,
     Caught: () => `c ${fielder} b ${bowler}`,
     Stumped: () => `st ${bowlingTeam?.wicketKeeper} b ${bowler}`,
   };
-  console.log(bowlingTeam, fielder);
 
-  const bowlerUpdate = wicketFormats[run]?.() || "not out";
+  const batsmanStatus =
+    typeof run === "string" ? wicketFormats[run]?.() : "not out";
 
   let playerEntry = {
     ...selectedPlayer,
@@ -25,9 +35,9 @@ export default function updateBatsman(run, selectedPlayer, battingCard, bowler, 
     totalRuns: totalRuns,
     totalDeliveries: totalDeliveries,
     strikeRate: strikeRate,
-    bowler: bowlerUpdate,
-    fours: selectedPlayer.runs.filter((run) => run === 4).length,
-    sixes: selectedPlayer.runs.filter((run) => run === 6).length,
+    status: batsmanStatus,
+    fours: runs.filter((run) => run === 4).length,
+    sixes: runs.filter((run) => run === 6).length,
   };
 
   const findPlayer = battingCard.findIndex(
