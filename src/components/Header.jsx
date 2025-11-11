@@ -42,11 +42,11 @@ export default function HeaderComponent() {
             <NavLink
               key={id}
               to={route.path}
-              style={{ textDecoration: "none", color: "white", padding: "0.35em 0.7em" }}
+              style={({ isActive }) => ({ textDecoration: "none",  padding: "0.35em 0.7em", color: "white", fontWeight: isActive ? "bold" : "normal", borderBottom: isActive ? "3px solid white" : "none", })}
             >
-              {route.element === "Select" 
-              ? (Object.keys(_teamOne[0]).length > 0 && Object.keys(_teamTwo[0]).length > 0) ? "Game" : route.element
-              : route.element}
+              {route.element === "Select"
+                ? (Object.keys(_teamOne[0]).length > 0 && Object.keys(_teamTwo[0]).length > 0) ? "Game" : route.element
+                : route.element}
             </NavLink>
           )
         }
