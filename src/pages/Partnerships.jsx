@@ -1,6 +1,7 @@
 import { useAtom } from "jotai"
 import { activePartnership, inningsOnePartnershipCard, inningsTwoPartnershipCard } from "../jotai/atom";
 import addRuns from "../function/addRuns";
+import StraightAnglePieChart from "../components/chart";
 
 
 export function Partnerships() {
@@ -52,11 +53,16 @@ function ActivePartnership({ singlePartnership }) {
   const totalDeliveries = partnerOneTotalDeliveries + partnerTwoTotalDeliveries;
   const strikeRate = ((totalRuns / totalDeliveries) * 100).toFixed(2);
 
+  const chartData = [
+    { name: partnerOneName, value: partnerOneRuns },
+    { name: partnerTwoName, value: partnerTwoRuns },
+  ];
+
 
   return (
-    <div style={{ fontSize: "0.85em", margin: "1em 0em", }}>
+    <details style={{ fontSize: "0.8em", margin: "1em 0em",  }}>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 1.5fr", }}>
+      <summary style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 1.5fr", }}>
 
         <div style={{ textAlign: "left", }}>
           <p>{partnerOneName}</p>
@@ -73,8 +79,10 @@ function ActivePartnership({ singlePartnership }) {
           <p>{partnerTwoRuns} ({partnerTwoTotalDeliveries})</p>
         </div>
 
-      </div>
+      </summary>
 
-    </div>
+      <StraightAnglePieChart data={chartData} />
+
+    </details>
   )
 };
