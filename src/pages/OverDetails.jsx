@@ -9,7 +9,7 @@ export const OverDetails = () => {
   const [_inningsTwoAllOvers, setInningsTwoAllOvers] = useAtom(inningsTwoAllOvers);
 
   return (
-    <div style={{ fontSize: "0.8em", }}>
+    <div style={{ fontSize: "0.75em", }}>
 
       <h2 style={{ textAlignLast: "right", padding: "0.25em 0.5em", backgroundColor: "#ccc", color: "black", borderRadius: "0.55em 0.55em 1em 1em" }}>Innings One</h2>
 
