@@ -45,15 +45,15 @@ export const StackedBarChart = ({ data }) => {
       <XAxis dataKey="name" ticks={xTicks} type='number' />;
       <YAxis width="auto" ticks={yTicks} type='number' />
       <Tooltip />
-      
+
       {/* <Legend /> */}
-      <Bar dataKey="runs" stackId="a" fill="#65a0d8ff" background={false} radius={5} />
-      <Bar dataKey="wicket1" stackId="a" fill="#fd0000ff" background={false} radius={20} maxBarSize={15} />
-      <Bar dataKey="wicket2" stackId="a" fill="#fd0000ff" background={false} radius={20} />
-      <Bar dataKey="wicket3" stackId="a" fill="#fd0000ff" background={false} radius={20} />
-      <Bar dataKey="wicket4" stackId="a" fill="#fd0000ff" background={false} radius={20} />
-      <Bar dataKey="wicket5" stackId="a" fill="#fd0000ff" background={false} radius={20} />
-      <Bar dataKey="wicket6" stackId="a" fill="#fd0000ff" background={false} radius={20} />
+      <Bar dataKey="runs" stackId="a" fill="#65a0d8ff" radius={5} maxBarSize={30} />
+      <Bar dataKey="wicket1" stackId="a" fill="#fd0000ff" radius={20} maxBarSize={15} />
+      <Bar dataKey="wicket2" stackId="a" fill="#fd0000ff" radius={20} maxBarSize={15} />
+      <Bar dataKey="wicket3" stackId="a" fill="#fd0000ff" radius={20} maxBarSize={15} />
+      <Bar dataKey="wicket4" stackId="a" fill="#fd0000ff" radius={20} maxBarSize={15} />
+      <Bar dataKey="wicket5" stackId="a" fill="#fd0000ff" radius={20} maxBarSize={15} />
+      <Bar dataKey="wicket6" stackId="a" fill="#fd0000ff" radius={20} maxBarSize={15} />
     </BarChart>
   );
 };
