@@ -1,18 +1,22 @@
 
+import { useCallback, useEffect, useRef } from "react";
 import { useAtom } from "jotai";
 
+// states
 import { activePartnership, bowler, onStrike, overRuns, partnerOne, partnerTwo, playerOne, playerTwo, prevBowler, run, } from "../jotai/atom";
-import { ScoreBar } from "./ScoreBar";
 
+// components
+import { Overview } from "./Overview";
+import { ScoreBar } from "./ScoreBar";
+import { SinglePartnership } from "./SinglePartnership";
+
+// functions
 import addRuns from "../function/addRuns"
 import { addBatsman, addBowler } from "../function/addPlayers";
 import generateRuns from "../function/generateRuns";
-import { useCallback, useEffect, useRef } from "react";
 import wicketsCounter from "../function/wicketsCounter";
 import { updateBowler, updateOver } from "../function/updateBowler";
 import updateBatsman from "../function/updateBatsman";
-import { Overview } from "./Overview";
-import { SinglePartnership } from "./SinglePartnership";
 
 
 export const Pitch = ({
@@ -96,7 +100,7 @@ export const Pitch = ({
         outPlayer.current = "playerOne";
 
         // update player state
-        const { playerEntry, updatedArray } = updateBatsman(run, _playerOne, battingCard, _bowler.playerName, bowlingTeam,);
+        const { updatedArray } = updateBatsman(run, _playerOne, battingCard, _bowler.playerName, bowlingTeam,);
         setBattingCard(updatedArray);
         setPlayerOne({});
 
@@ -122,7 +126,7 @@ export const Pitch = ({
         outPlayer.current = "playerTwo";
 
         // update player state
-        const { playerEntry, updatedArray } = updateBatsman(run, _playerTwo, battingCard, _bowler.playerName, bowlingTeam,);
+        const { updatedArray } = updateBatsman(run, _playerTwo, battingCard, _bowler.playerName, bowlingTeam,);
         setBattingCard(updatedArray);
         setPlayerTwo({});
 
@@ -151,20 +155,20 @@ export const Pitch = ({
 
       if (_onStrike) {
 
+        // update player state
         const { playerEntry, updatedArray } = updateBatsman(run, _playerOne, battingCard, null, bowlingTeam,);
-
         setPlayerOne(playerEntry);
         setBattingCard(updatedArray);
 
+        // update partner state
         const singlePartnerUpdate = {
           playerName: _partnerOne.playerName,
           runs: [..._partnerOne.runs, run],
-        }
-
+        };
         setPartnerOne(singlePartnerUpdate);
 
         const updatePartnership = {
-          partnerOne: playerEntry,
+          partnerOne: singlePartnerUpdate,
           partnerTwo: _partnerTwo,
         };
         setActivePartnership(updatePartnership);
@@ -180,12 +184,11 @@ export const Pitch = ({
           playerName: _partnerTwo.playerName,
           runs: [..._partnerTwo.runs, run],
         }
-
         setPartnerTwo(singlePartnerUpdate);
 
         const updatePartnership = {
           partnerOne: _partnerOne,
-          partnerTwo: playerEntry,
+          partnerTwo: singlePartnerUpdate,
         };
         setActivePartnership(updatePartnership);
 
