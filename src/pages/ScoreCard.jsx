@@ -41,7 +41,7 @@ export const ScoreCard = () => {
 
               return (
                 <div key={id} style={{ fontSize: "0.9em", borderBottom: "1px solid whitesmoke", }}>
-                  <details style={{ textAlign: "left", }} open={player.status === "not out" ? true : false}>
+                  <details style={{ textAlign: "left", }} open={player.totalRuns > 50 ? true : false}>
                     <summary style={{ padding: "0.7em", display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", alignItems: "center", backgroundColor: player.totalRuns > 50 ? "#7e7e7eff" : "" }}>
                       <span>{player.playerName} {player.status === "not out" ? <strong>*</strong> : ""}</span>
                       <span style={{ textAlign: "right", }}>{player.totalRuns} ({player.runs.length})</span>
@@ -49,7 +49,7 @@ export const ScoreCard = () => {
                       <span style={{ textAlign: "center", }}>{player.sixes}</span>
                       <span style={{ textAlign: "center", }}>{player.strikeRate}</span>
                     </summary>
-                    <p style={{ margin: "0em 0.7em", color: "#ccc", fontSize: "0.9em", }}>{player.status}</p>
+                    <p style={{ margin: "0em 0.7em", color: "#ccc", fontSize: "0.9em", }}>{player.status === "not out" ? "" : player.status}</p>
 
                     <div style={{ margin: "0em 0.7em", display: "flex", justifyContent: "space-around", textAlign: "center" }}>
                       {
