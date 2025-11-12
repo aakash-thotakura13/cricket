@@ -298,10 +298,7 @@ export const Pitch = ({
         </div>
 
         {/* Innings Overview Display */}
-        <Overview playerOne={_playerOne} playerTwo={_playerTwo} bowler={_bowler} prevBowler={_prevBowler} />
-
-        {/* Active Partnership Display */}
-        <SinglePartnership partnerOne={_partnerOne} partnerTwo={_partnerTwo} />
+        <Overview playerOne={_playerOne} playerTwo={_playerTwo} bowler={_bowler} prevBowler={_prevBowler} battingCard={battingCard} bowlingCard={bowlingCard} />
 
       </div>
 
