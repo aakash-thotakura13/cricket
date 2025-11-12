@@ -8,10 +8,6 @@ export const OverDetails = () => {
   const [_inningsOneAllOvers, setInningsOneAllOvers] = useAtom(inningsOneAllOvers);
   const [_inningsTwoAllOvers, setInningsTwoAllOvers] = useAtom(inningsTwoAllOvers);
 
-  console.clear()
-  console.log(_inningsOneAllOvers)
-
-
   return (
     <div style={{ fontSize: "0.8em", }}>
 
