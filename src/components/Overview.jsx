@@ -1,22 +1,8 @@
-import addRuns from "../function/addRuns";
-import wicketsCounter from "../function/wicketsCounter";
 
-export const Overview = ({ playerOne, playerTwo, bowler, prevBowler }) => {
+export const Overview = ({ battingCard, bowlingCard }) => {
 
-  const getBattingStats = player => ({
-    playerName: player?.playerName || "",
-    runs: addRuns(player?.runs) || 0,
-    balls: player?.runs?.length || 0,
-  });
-
-  const getBowlingStats = player => ({
-    playerName: player?.playerName || "",
-    runs: addRuns(player?.runs) || 0,
-    wickets: wicketsCounter(player?.runs) || 0,
-  });
-
-  const batsmen = [getBattingStats(playerOne), getBattingStats(playerTwo)];
-  const bowlers = [getBowlingStats(bowler), getBowlingStats(prevBowler)];
+  const filterBatsman = battingCard.length > 0 && battingCard.sort((a, b) => b.totalRuns - a.totalRuns).slice(0, 3) || []
+  const filterBowler = bowlingCard.length > 0 && bowlingCard.sort((a, b) => b.runsConceded - a.runsConceded).sort((a, b) => b.wickets - a.wickets).slice(0, 3) || []
 
   return (
 
@@ -24,36 +10,25 @@ export const Overview = ({ playerOne, playerTwo, bowler, prevBowler }) => {
 
       <h3>Overview</h3>
 
-      <Section title="Batting">
-        {batsmen.map((b, i) => (
-          <StatRow key={i} label={b.playerName} value={`${b.runs} (${b.balls})`} />
-        ))}
-      </Section>
+      <p style={styles.sectionTitle}>Batting</p>
 
-      <Section title="Bowling">
-        {bowlers.map((b, i) => (
-          <StatRow key={i} label={b.playerName} value={`${b.wickets}/${b.runs}`} />
-        ))}
-      </Section>
+      {
+        filterBatsman.map((batsman, id) => <p key={id} style={styles.subContainer}>
+          <span>{batsman.playerName}</span> <span>{batsman.totalRuns} ({batsman.totalDeliveries})</span>
+        </p>)
+      }
+
+      <p style={styles.sectionTitle}>Bowling</p>
+
+      {
+        filterBowler.map((bowler, id) => <p key={id} style={styles.subContainer}>
+          <span>{bowler.playerName}</span> <span>{bowler.wickets} / {bowler.runsConceded}</span>
+        </p>)
+      }
 
     </div>
   )
 };
-
-const Section = ({ title, children }) => (
-  <>
-    <p style={styles.sectionTitle}>
-      {title}
-    </p>
-    {children}
-  </>
-);
-
-const StatRow = ({ label, value }) => (
-  <p style={styles.statRow}>
-    <span>{label}</span> <span>{value}</span>
-  </p>
-);
 
 
 const styles = {
@@ -63,6 +38,11 @@ const styles = {
     border: "5px double #ccc",
     borderRadius: "2em",
   },
+  subContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    margin: "0.5em 1.4em",
+  },
   sectionTitle: {
     width: "90%",
     margin: "0.75em auto",
@@ -71,10 +51,5 @@ const styles = {
     textShadow: "1px 1px 1px black",
     borderRadius: "1em",
     textAlign: "center",
-  },
-  statRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    margin: "0.75em 1.4em",
   },
 };
