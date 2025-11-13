@@ -8,7 +8,6 @@ import { activePartnership, bowler, onStrike, overRuns, partnerOne, partnerTwo, 
 // components
 import { Overview } from "./Overview";
 import { ScoreBar } from "./ScoreBar";
-import { SinglePartnership } from "./SinglePartnership";
 
 // functions
 import addRuns from "../function/addRuns"
@@ -25,7 +24,7 @@ export const Pitch = ({
   battingCard, setBattingCard,
   bowlingCard, setBowlingCard,
   partnershipData, setPartnershipData,
-  allOvers, setAllOvers
+  allOvers, setAllOvers, status
 }) => {
 
   const [_playerOne, setPlayerOne] = useAtom(playerOne);
@@ -64,6 +63,7 @@ export const Pitch = ({
 
 
   useEffect(() => {
+
     if (_overRuns.length > 5 && _overRuns.length === 6) {
 
       const updatedArray = updateOver(_bowler, bowlingCard, _overRuns,);
@@ -71,7 +71,19 @@ export const Pitch = ({
 
       overUp();
     };
-  }, [_overRuns, overUp]);
+
+    if (allOvers.length === 10) {
+      status(true);
+      setPlayerOne({}); setPlayerTwo({});
+      setPartnerOne({}); setPartnerTwo({});
+
+      setActivePartnership([]);
+      setAllOvers([]);
+
+      setOnStrike(true);
+    };
+
+  }, [_overRuns, overUp, status]);
 
 
   function game() {
