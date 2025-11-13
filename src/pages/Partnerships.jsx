@@ -1,8 +1,7 @@
 import { useAtom } from "jotai"
 import { activePartnership, inningsOnePartnershipCard, inningsTwoPartnershipCard } from "../jotai/atom";
 import addRuns from "../function/addRuns";
-import StraightAnglePieChart from "../components/chart";
-
+import { StraightAnglePieChart } from "../components/chart/StraightAnglePieChart"
 
 export function Partnerships() {
 
@@ -36,7 +35,7 @@ function AllPartnerships({ partnerships }) {
       ))}
     </div>
   )
-}
+};
 
 
 function ActivePartnership({ singlePartnership }) {
@@ -60,7 +59,7 @@ function ActivePartnership({ singlePartnership }) {
 
 
   return (
-    <details style={{ fontSize: "0.8em", margin: "1em 0em",  }}>
+    <details style={{ fontSize: "0.8em", margin: "1em 0em", }}>
 
       <summary style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 1.5fr", }}>
 

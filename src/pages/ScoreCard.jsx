@@ -2,15 +2,14 @@ import { useAtom } from "jotai"
 import { inningsOneBattingScoreCard, inningsOneBowlingScoreCard } from "../jotai/atom"
 import addRuns from "../function/addRuns";
 import { countOccurrences } from "../function/countOccurrences";
-import { StackedBarChart } from "../components/chart";
 import { convertToBowlerChartData } from "../function/convertToBowlerChartData";
+import { StackedBarChart } from "../components/chart/StackedBarChart";
 
 
 export const ScoreCard = () => {
 
   const [_inningsOneBattingScoreCard, setInningsOneBattingScoreCard] = useAtom(inningsOneBattingScoreCard);
   const [_inningsOneBowlingScoreCard, setInningsOneBowlingScoreCard] = useAtom(inningsOneBowlingScoreCard);
-
 
   return (
     <div>
