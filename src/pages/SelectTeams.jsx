@@ -118,7 +118,7 @@ export const SelectTeam = () => {
                   setBattingCard={setInningsTwoBattingScoreCard}
                   bowlingCard={_inningsTwoBowlingScoreCard}
                   setBowlingCard={setInningsTwoBowlingScoreCard}
-                  partnerShipData={_inningsTwoPartnershipCard}
+                  partnershipData={_inningsTwoPartnershipCard}
                   setPartnershipData={setInningsTwoPartnershipCard}
                   allOvers={_inningsTwoAllovers}
                   setAllOvers={setInningsTwoAllOvers}
