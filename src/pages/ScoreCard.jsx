@@ -1,9 +1,16 @@
+import { useState } from "react";
 import { useAtom } from "jotai"
-import { inningsOneBattingScoreCard, inningsOneBowlingScoreCard } from "../jotai/atom"
+
+// states
+import { inningsOneBattingScoreCard, inningsOneBowlingScoreCard, inningsTwoBattingScoreCard, inningsTwoBowlingScoreCard } from "../jotai/atom"
+
+// components
+import { StackedBarChart } from "../components/chart/StackedBarChart";
+
+// functions
 import addRuns from "../function/addRuns";
 import { countOccurrences } from "../function/countOccurrences";
 import { convertToBowlerChartData } from "../function/convertToBowlerChartData";
-import { StackedBarChart } from "../components/chart/StackedBarChart";
 
 
 export const ScoreCard = () => {
@@ -11,13 +18,25 @@ export const ScoreCard = () => {
   const [_inningsOneBattingScoreCard, setInningsOneBattingScoreCard] = useAtom(inningsOneBattingScoreCard);
   const [_inningsOneBowlingScoreCard, setInningsOneBowlingScoreCard] = useAtom(inningsOneBowlingScoreCard);
 
+  const [_inningsTwoBattingScoreCard, setInningsTwoBattingScoreCard] = useAtom(inningsTwoBattingScoreCard);
+  const [_inningsTwoBowlingScoreCard, setInningsTwoBowlingScoreCard] = useAtom(inningsTwoBowlingScoreCard);
+
+  const [displayInnings, setDisplayInnings] = useState(true);
+
   return (
     <div>
       <h2>Scorecard</h2>
 
-      <div style={{ fontSize: "0.85em", }}>
+      <nav style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", fontSize: "1.3em", fontWeight: "bold", borderRadius: "1em", overflow: "hidden", }}>
+        <li style={displayInnings === true ? {...styles.heading, padding: "0.7em",} : { padding: "0.7em", }} onClick={() => setDisplayInnings(true)}>Innings One</li>
+        <li style={displayInnings === false ? {...styles.heading, padding: "0.7em",} : { padding: "0.7em", }} onClick={() => setDisplayInnings(false)}>Innings Two</li>
+      </nav>
 
-        <p style={{ cursor: "pointer", listStyle: "none", textAlign: "left", fontSize: "1.5em", backgroundColor: "grey", padding: "0.35em 0.7em", borderRadius: "1em", fontWeight: "bold", }}>Innings One</p>
+      {
+        displayInnings ? <>InningsOne</> : <>InningsTwo</>
+      }
+
+      <div style={{ fontSize: "0.85em", }}>
 
         {/* batting-card display */}
         <h2 style={{ textAlignLast: "left" }}>Batting Scorecard</h2>
@@ -123,4 +142,10 @@ export const ScoreCard = () => {
 
     </div>
   )
+}
+
+const styles = {
+  heading: {
+    backgroundColor: "#7e7e7eff",
+  },
 }
