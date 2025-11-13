@@ -3,6 +3,7 @@ import { inningsOne, inningsOneBattingScoreCard, inningsOneBowlingScoreCard, inn
 import { australia2025, india2025, indianW, southAfricaW } from "../database"
 import { Pitch } from "../components/Pitch";
 import { SelectedTeam } from "../components/SelectedTeam";
+import { useEffect } from "react";
 
 const allTeams = [indianW, southAfricaW, india2025, australia2025,];
 
@@ -11,8 +12,8 @@ export const SelectTeam = () => {
   const [_teamOne, setTeamOne] = useAtom(teamOne);
   const [_teamTwo, setTeamTwo] = useAtom(teamTwo);
 
-  const [_inningsOne, setInningsOne] = useAtom(inningsOne);
-  const [_inningsTwo, setInningsTwo] = useAtom(inningsTwo);
+  const [_inningsOneStatus, setInningsOneStatus] = useAtom(inningsOne);
+  const [_inningsTwoStatus, setInningsTwoStatus] = useAtom(inningsTwo);
 
   const [_inningsOneBattingScoreCard, setInningsOneBattingScoreCard] = useAtom(inningsOneBattingScoreCard);
   const [_inningsOneBowlingScoreCard, setInningsOneBowlingScoreCard] = useAtom(inningsOneBowlingScoreCard);
@@ -92,7 +93,7 @@ export const SelectTeam = () => {
           </>
           : <>
             {
-              !_inningsOne
+              !_inningsOneStatus
                 ? <Pitch
                   battingTeam={_teamOne}
                   setBattingTeam={setTeamOne}
@@ -106,6 +107,7 @@ export const SelectTeam = () => {
                   setPartnershipData={setInningsOnePartnershipCard}
                   allOvers={_inningsOneAllovers}
                   setAllOvers={setInningsOneAllOvers}
+                  status={setInningsOneStatus}
                 />
                 : <Pitch
                   battingTeam={_teamTwo}
@@ -120,6 +122,7 @@ export const SelectTeam = () => {
                   setPartnershipData={setInningsTwoPartnershipCard}
                   allOvers={_inningsTwoAllovers}
                   setAllOvers={setInningsTwoAllOvers}
+                  status={setInningsTwoStatus}
                 />
             }
           </>
