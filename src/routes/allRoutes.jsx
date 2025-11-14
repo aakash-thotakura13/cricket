@@ -4,6 +4,7 @@ import { SelectTeam } from "../pages/SelectTeams";
 import { ScoreCard } from "../pages/ScoreCard";
 import { OverDetails } from "../pages/OverDetails";
 import { Partnerships } from "../pages/Partnerships";
+import { Graphs } from "../pages/Graphs";
 
 
 export const allRoutes = createBrowserRouter([
@@ -29,7 +30,7 @@ export const allRoutes = createBrowserRouter([
       },
       {
         path: "/graphs",
-        element: <>Graphs</>
+        element: <Graphs />,
       },
       {
         path: "/comparison",
