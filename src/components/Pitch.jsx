@@ -72,10 +72,12 @@ export const Pitch = ({
       overUp();
     };
 
+
     if (allOvers.length === 10) {
       status(true);
       setPlayerOne({}); setPlayerTwo({});
       setPartnerOne({}); setPartnerTwo({});
+      setBowler({}); setPrevBowler({});
 
       setActivePartnership([]);
       setAllOvers([]);
