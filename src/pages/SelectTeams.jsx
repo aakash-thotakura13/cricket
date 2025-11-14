@@ -1,9 +1,14 @@
 import { useAtom } from "jotai"
+
+// states
 import { inningsOne, inningsOneBattingScoreCard, inningsOneBowlingScoreCard, inningsOneAllOvers, inningsOnePartnershipCard, inningsTwo, inningsTwoBattingScoreCard, inningsTwoBowlingScoreCard, inningsTwoAllOvers, inningsTwoPartnershipCard, startGame, teamOne, teamTwo } from "../jotai/atom"
+
+// database
 import { australia2025, india2025, indianW, southAfricaW } from "../database"
+
+// components
 import { Pitch } from "../components/Pitch";
 import { SelectedTeam } from "../components/SelectedTeam";
-import { useEffect } from "react";
 
 const allTeams = [indianW, southAfricaW, india2025, australia2025,];
 
@@ -107,7 +112,7 @@ export const SelectTeam = () => {
                   setPartnershipData={setInningsOnePartnershipCard}
                   allOvers={_inningsOneAllovers}
                   setAllOvers={setInningsOneAllOvers}
-                  status={setInningsOneStatus}
+                  setStatus={setInningsOneStatus}
                 />
                 : <Pitch
                   battingTeam={_teamTwo}
@@ -122,7 +127,7 @@ export const SelectTeam = () => {
                   setPartnershipData={setInningsTwoPartnershipCard}
                   allOvers={_inningsTwoAllovers}
                   setAllOvers={setInningsTwoAllOvers}
-                  status={setInningsTwoStatus}
+                  setStatus={setInningsTwoStatus}
                 />
             }
           </>
