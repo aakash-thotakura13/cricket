@@ -24,7 +24,7 @@ export const Pitch = ({
   battingCard, setBattingCard,
   bowlingCard, setBowlingCard,
   partnershipData, setPartnershipData,
-  allOvers, setAllOvers, status
+  allOvers, setAllOvers, setStatus
 }) => {
 
   const [_playerOne, setPlayerOne] = useAtom(playerOne);
@@ -59,33 +59,46 @@ export const Pitch = ({
     setPrevBowler(prev => _bowler);
     setOnStrike(!_onStrike);
 
-  }, [_bowler]);
+  }, [_playerOne, _playerTwo, _bowler, _overRuns]);
+
+  function inningUp() {
+
+    const partnershipUpdate = {
+      partnerOne: _partnerOne,
+      partnerTwo: _partnerTwo,
+    };
+
+    setPartnershipData([...partnershipData, partnershipUpdate]);
+    console.table("partnership updated", partnershipUpdate)
+
+    setStatus(true);
+    setPlayerOne({}); setPlayerTwo({});
+    setPartnerOne({}); setPartnerTwo({});
+    setBowler({}); setPrevBowler({});
+    setOnStrike(true);
+
+    console.log("Innings Over");
+    setActivePartnership([]);
+    
+  }
 
 
   useEffect(() => {
 
-    if (_overRuns.length > 5 && _overRuns.length === 6) {
-
-      const updatedArray = updateOver(_bowler, bowlingCard, _overRuns,);
+    if (_overRuns.length === 6) {
+      const updatedArray = updateOver(_bowler, bowlingCard, _overRuns);
       setBowlingCard(updatedArray);
-
       overUp();
-    };
+    }
 
+  }, [_overRuns]);
 
-    if (allOvers.length === 10) {
-      status(true);
-      setPlayerOne({}); setPlayerTwo({});
-      setPartnerOne({}); setPartnerTwo({});
-      setBowler({}); setPrevBowler({});
+  useEffect(() => {
+    if (allOvers.length === 5) {
+      inningUp();
+    }
+  }, [allOvers]);
 
-      setActivePartnership([]);
-      setAllOvers([]);
-
-      setOnStrike(true);
-    };
-
-  }, [_overRuns, overUp, status]);
 
 
   function game() {
