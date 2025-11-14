@@ -19,7 +19,7 @@ export function addBatsman(
     return;
   };
 
-  const playerEntry = { playerName: player, runs: [], };
+  const playerEntry = { playerName: player, runs: [], status: "not out", totalRuns: 0, totalDeliveries: 0, strikeRate: 0.0, fours: 0, sixes: 0, };
 
   if (outPlayer === "playerOne") {
     
@@ -51,7 +51,7 @@ export function addBatsman(
     }
   }
 
-  setBattingCard((prev) => [...prev, playerEntry]);
+  setBattingCard([...battingCard, playerEntry]);
 };
 
 export function addBowler(player, setBowler, bowlingCard, setBowlingCard) {
