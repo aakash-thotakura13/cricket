@@ -1,9 +1,7 @@
 import addRuns from "./addRuns";
 
 export function updateBowler(run, _bowler, bowlingCard) {
-
-  console.clear();
-
+  
   const runs = [..._bowler.runs, run];
   const ballsDelivered = runs.length;
   const runsConceded = addRuns(runs);
