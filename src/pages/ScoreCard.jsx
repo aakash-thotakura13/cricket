@@ -6,6 +6,8 @@ import { inningsOneBattingScoreCard, inningsOneBowlingScoreCard, inningsTwoBatti
 
 // components
 import { StackedBarChart } from "../components/chart/StackedBarChart";
+import { PageTitle } from "../components/PageTitle";
+import { PageNavBar } from "../components/PageNavBar";
 
 // functions
 import addRuns from "../function/addRuns";
@@ -23,19 +25,12 @@ export const ScoreCard = () => {
 
   const [displayInnings, setDisplayInnings] = useState(true);
 
-  console.log(..._inningsOneBattingScoreCard)
-
   return (
     <div>
-      <h2>Scorecard</h2>
+      <PageTitle title="Scorecard" />
+      <PageNavBar displayInnings={displayInnings} setDisplayInnings={setDisplayInnings} />
 
-      <nav style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", fontSize: "1.3em", fontWeight: "bold", borderRadius: "1em", overflow: "hidden", }}>
-        <li style={{ backgroundColor: displayInnings === true ? "#7e7e7eff" : "", padding: "0.7em", }} onClick={() => setDisplayInnings(true)}>Innings One</li>
-        <li style={{ backgroundColor: displayInnings === false ? "#7e7e7eff" : "", padding: "0.7em", }} onClick={() => setDisplayInnings(false)}>Innings Two</li>
-      </nav>
-
-
-      <div style={{ fontSize: "0.85em", }}>
+      <div style={{ fontSize: "0.8em", }}>
         {
           displayInnings
             ? <>
@@ -53,7 +48,9 @@ export const ScoreCard = () => {
   )
 }
 
-function BattingScoreCard({ battingCard, }) {
+function BattingScoreCard({ battingCard }) {
+  console.clear()
+  console.table(battingCard)
   return (
     <>
       {/* batting-card display */}
@@ -113,7 +110,8 @@ function BattingScoreCard({ battingCard, }) {
   )
 };
 
-function BowlingScoreCard({ bowlingCard, }) {
+function BowlingScoreCard({ bowlingCard }) {
+  console.table(bowlingCard)
   return (
     <>
       {/* bowling-card display */}

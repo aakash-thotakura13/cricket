@@ -1,20 +1,47 @@
+import { useState } from "react";
 import { useAtom } from "jotai"
+
+// states
 import { inningsOneAllOvers, inningsTwoAllOvers } from "../jotai/atom"
+
+// components
+import { PageTitle } from "../components/PageTitle";
+import { PageNavBar } from "../components/PageNavBar";
+
+// functions
 import addRuns from "../function/addRuns";
 import wicketsCounter from "../function/wicketsCounter";
+
 
 export const OverDetails = () => {
 
   const [_inningsOneAllOvers, setInningsOneAllOvers] = useAtom(inningsOneAllOvers);
   const [_inningsTwoAllOvers, setInningsTwoAllOvers] = useAtom(inningsTwoAllOvers);
 
+  const [displayInnings, setDisplayInnings] = useState(true);
+
   return (
-    <div style={{ fontSize: "0.75em", }}>
+    <div>
+      <PageTitle title="Over Details" />
+      <PageNavBar displayInnings={displayInnings} setDisplayInnings={setDisplayInnings} />
 
-      <h2 style={{ textAlignLast: "right", padding: "0.25em 0.5em", backgroundColor: "#ccc", color: "black", borderRadius: "0.55em 0.55em 1em 1em" }}>Innings One</h2>
+      <div style={{ fontSize: "0.8em" }}>
+        {
+          displayInnings
+            ? <><EachInnings allOvers={_inningsOneAllOvers} /></>
+            : <><EachInnings allOvers={_inningsTwoAllOvers} /></>
+        }
+      </div>
 
+    </div>
+  )
+}
+
+function EachInnings({ allOvers }) {
+  return (
+    <div>
       {
-        _inningsOneAllOvers.map((entry, id) => {
+        allOvers.map((entry, id) => {
 
           const hasStringRun = entry.overRuns.some(run => typeof run === "string");
 
@@ -66,7 +93,6 @@ export const OverDetails = () => {
           )
         })
       }
-
     </div>
   )
 }

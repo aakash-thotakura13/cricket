@@ -1,7 +1,17 @@
+import { useState } from "react";
 import { useAtom } from "jotai"
+
+// states
 import { activePartnership, inningsOnePartnershipCard, inningsTwoPartnershipCard } from "../jotai/atom";
-import addRuns from "../function/addRuns";
+
+// components
 import { StraightAnglePieChart } from "../components/chart/StraightAnglePieChart"
+import { PageTitle } from "../components/PageTitle";
+import { PageNavBar } from "../components/PageNavBar";
+
+// functions
+import addRuns from "../function/addRuns";
+
 
 export function Partnerships() {
 
@@ -9,17 +19,23 @@ export function Partnerships() {
   const [_inningsOnePartnershipCard, setInningsOnePartnershipCard] = useAtom(inningsOnePartnershipCard);
   const [_inningsTwoPartnershipCard, setInningsTwoPartnershipCard] = useAtom(inningsTwoPartnershipCard);
 
+  const [displayInnings, setDisplayInnings] = useState(true);
+  const activePartnershipDisplayStatus = Object.keys(_activePartnership).length > 0;
+
   return (
     <div>
+      <PageTitle title="Partnerships" />
+      <PageNavBar displayInnings={displayInnings} setDisplayInnings={setDisplayInnings} />
 
-      <h2>Active Partnerships</h2>
-      <ActivePartnership singlePartnership={_activePartnership} />
+      {activePartnershipDisplayStatus && <ActivePartnership singlePartnership={_activePartnership} />}
 
-      <h2>Innings-One Partnerships</h2>
-      <AllPartnerships partnerships={_inningsOnePartnershipCard} />
-
-      <h2>Innings-Two Partnerships</h2>
-      <AllPartnerships partnerships={_inningsTwoPartnershipCard} />
+      <div style={{ fontSize: "0.8em", }}>
+        {
+          displayInnings
+            ? <><AllPartnerships partnerships={_inningsOnePartnershipCard} /></>
+            : <><AllPartnerships partnerships={_inningsTwoPartnershipCard} /></>
+        }
+      </div>
 
     </div>
   )
@@ -59,9 +75,9 @@ function ActivePartnership({ singlePartnership }) {
 
 
   return (
-    <details style={{ fontSize: "0.8em", margin: "1em 0em", }}>
+    <details style={{ margin: "1em 0em", }}>
 
-      <summary style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 1.5fr", }}>
+      <summary style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 1.5fr", gap: "0.5em", alignItems: "center", }}>
 
         <div style={{ textAlign: "left", }}>
           <p>{partnerOneName}</p>
@@ -69,8 +85,8 @@ function ActivePartnership({ singlePartnership }) {
         </div>
 
         <div style={{ backgroundColor: "#ccc", color: "black", padding: "0em", borderRadius: "1em", width: "100px", aspectRatio: "1.2/1", placeContent: "center", placeItems: "center", }}>
-          <p style={{ padding: "0em", margin: "0em 0em 0.7em", fontSize: "1.1em", }}>{totalRuns} ({totalDeliveries})</p>
-          <p style={{ fontWeight: "bold", fontSize: "0.95em" }}>{strikeRate}</p>
+          <p style={{ padding: "0em", margin: "0em 0em 0.5em", fontWeight: "bold", fontSize: "1.5em", }}>{totalRuns} ({totalDeliveries})</p>
+          <p style={{ fontWeight: "bold", fontSize: "0.95em", color: "#5f5f5fff", }}>{strikeRate}</p>
         </div>
 
         <div style={{ textAlign: "right", }}>
