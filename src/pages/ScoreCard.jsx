@@ -23,129 +23,145 @@ export const ScoreCard = () => {
 
   const [displayInnings, setDisplayInnings] = useState(true);
 
+  console.log(..._inningsOneBattingScoreCard)
+
   return (
     <div>
       <h2>Scorecard</h2>
 
       <nav style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", fontSize: "1.3em", fontWeight: "bold", borderRadius: "1em", overflow: "hidden", }}>
-        <li style={displayInnings === true ? {...styles.heading, padding: "0.7em",} : { padding: "0.7em", }} onClick={() => setDisplayInnings(true)}>Innings One</li>
-        <li style={displayInnings === false ? {...styles.heading, padding: "0.7em",} : { padding: "0.7em", }} onClick={() => setDisplayInnings(false)}>Innings Two</li>
+        <li style={{ backgroundColor: displayInnings === true ? "#7e7e7eff" : "", padding: "0.7em", }} onClick={() => setDisplayInnings(true)}>Innings One</li>
+        <li style={{ backgroundColor: displayInnings === false ? "#7e7e7eff" : "", padding: "0.7em", }} onClick={() => setDisplayInnings(false)}>Innings Two</li>
       </nav>
 
-      {
-        displayInnings ? <>InningsOne</> : <>InningsTwo</>
-      }
 
       <div style={{ fontSize: "0.85em", }}>
-
-        {/* batting-card display */}
-        <h2 style={{ textAlignLast: "left" }}>Batting Scorecard</h2>
-
-        {/* batting-card header component */}
-        <div style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", borderBottom: "3px solid whitesmoke", }}>
-          <span style={{ margin: "2px 0px", textAlign: "left" }}>Player</span>
-          <span style={{ margin: "2px 0px", }}>Runs</span>
-          <span style={{ margin: "2px 0px", }}>4s</span>
-          <span style={{ margin: "2px 0px", }}>6s</span>
-          <span style={{ margin: "2px 0px", }}>SR</span>
-        </div>
-
-        <div>
-          {
-            _inningsOneBattingScoreCard?.map((player, id) => {
-
-              const convertData = countOccurrences(player.runs)
-              const arrayDisplay = Object.keys(convertData);
-
-              return (
-                <div key={id} style={{ fontSize: "0.9em", borderBottom: "1px solid whitesmoke", }}>
-                  <details style={{ textAlign: "left", }} open={player.totalRuns > 50 ? true : false}>
-                    <summary style={{ padding: "0.7em", display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", alignItems: "center", backgroundColor: player.totalRuns > 50 ? "#7e7e7eff" : "" }}>
-                      <span>{player.playerName} {player.status === "not out" ? <strong>*</strong> : ""}</span>
-                      <span style={{ textAlign: "right", }}>{player.totalRuns} ({player.runs.length})</span>
-                      <span style={{ textAlign: "center", }}>{player.fours}</span>
-                      <span style={{ textAlign: "center", }}>{player.sixes}</span>
-                      <span style={{ textAlign: "center", }}>{player.strikeRate}</span>
-                    </summary>
-                    <p style={{ margin: "0em 0.7em", color: "#ccc", fontSize: "0.9em", }}>{player.status === "not out" ? "" : player.status}</p>
-
-                    <div style={{ margin: "0em 0.7em", display: "flex", justifyContent: "space-around", textAlign: "center" }}>
-                      {
-                        arrayDisplay
-                          .filter((data) => data !== "5")
-                          .map((data, id) => {
-                            return (
-                              <div key={id} style={{ borderLeft: "3px solid #ccc", borderRight: "3px solid #ccc", padding: "0em 1.3em", borderRadius: "1em" }}>
-                                <span style={{ fontWeight: "600" }}>{data}s</span> <br />
-                                <span>{convertData[data]}</span>
-                              </div>
-                            )
-                          })
-                      }
-                    </div>
-
-                  </details>
-                </div>
-              )
-            }
-            )
-          }
-        </div>
-
-        {/* bowling-card display */}
-        <h2 style={{ textAlignLast: "left" }}>Bowling Scorecard</h2>
-
-        {/* bowling-card header component */}
-        <div style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr", borderBottom: "3px solid whitesmoke", }}>
-          <span style={{ margin: "2px 0px", textAlign: "left" }}>Player</span>
-          <span style={{ margin: "2px 0px", }}>O</span>
-          <span style={{ margin: "2px 0px", }}>R</span>
-          <span style={{ margin: "2px 0px", }}>W</span>
-          <span style={{ margin: "2px 0px", }}>M</span>
-          <span style={{ margin: "2px 0px", }}>Econ</span>
-        </div>
-
-        <div>
-          {
-            _inningsOneBowlingScoreCard?.map((player, id) => {
-
-              const ballsDelivered = player.runs.length;
-              const oversCount = `${Math.trunc(ballsDelivered / 6)}`;
-              const remainingBalls = ballsDelivered - (oversCount * 6)
-              const runsConceded = addRuns(player.runs);
-              const wickets = player.runs.filter(run => typeof run === "string").length;
-              const economy = (runsConceded / oversCount).toFixed(2);
-
-              const convertToChartData = convertToBowlerChartData(player.bowlerOvers);
-
-              return (
-                <details key={id} style={{ fontSize: "0.9em", borderBottom: "1px solid whitesmoke", }}>
-
-                  <summary style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr", }}>
-                    <span style={{ margin: "0.7em 0em", textAlign: "left" }}>{player.playerName}</span>
-                    <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{oversCount}.{remainingBalls}</span>
-                    <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{runsConceded}</span>
-                    <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{wickets}</span>
-                    <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{player.maidens}</span>
-                    <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{economy}</span>
-                  </summary>
-
-                  <StackedBarChart data={convertToChartData} />
-
-                </details>
-              )
-            })
-          }
-        </div>
-
+        {
+          displayInnings
+            ? <>
+              <BattingScoreCard battingCard={_inningsOneBattingScoreCard} />
+              <BowlingScoreCard bowlingCard={_inningsOneBowlingScoreCard} />
+            </>
+            : <>
+              <BattingScoreCard battingCard={_inningsTwoBattingScoreCard} />
+              <BowlingScoreCard bowlingCard={_inningsTwoBowlingScoreCard} />
+            </>
+        }
       </div>
 
     </div>
   )
 }
 
-const styles = {
-  heading: {
-    backgroundColor: "#7e7e7eff",
-  },
+function BattingScoreCard({ battingCard, }) {
+  return (
+    <>
+      {/* batting-card display */}
+      <h2 style={{ textAlignLast: "left" }}>Batting Scorecard</h2>
+
+      {/* batting-card header component */}
+      <div style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", borderBottom: "3px solid whitesmoke", }}>
+        <span style={{ margin: "2px 0px", textAlign: "left" }}>Player</span>
+        <span style={{ margin: "2px 0px", }}>Runs</span>
+        <span style={{ margin: "2px 0px", }}>4s</span>
+        <span style={{ margin: "2px 0px", }}>6s</span>
+        <span style={{ margin: "2px 0px", }}>SR</span>
+      </div>
+
+      <div>
+        {
+          battingCard?.map((player, id) => {
+
+            const convertData = countOccurrences(player.runs)
+            const arrayDisplay = Object.keys(convertData);
+
+            return (
+              <div key={id} style={{ fontSize: "0.9em", borderBottom: "1px solid whitesmoke", }}>
+                <details style={{ textAlign: "left", }} open={player.totalRuns > 50 ? true : false}>
+                  <summary style={{ padding: "0.7em", display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", alignItems: "center", backgroundColor: player.totalRuns > 50 ? "#7e7e7eff" : "" }}>
+                    <span>{player.playerName}{player.status === "not out" ? <strong>*</strong> : ""}</span>
+                    <span style={{ textAlign: "right", }}>{player.totalRuns} ({player.runs.length})</span>
+                    <span style={{ textAlign: "center", }}>{player.fours}</span>
+                    <span style={{ textAlign: "center", }}>{player.sixes}</span>
+                    <span style={{ textAlign: "center", }}>{player.strikeRate}</span>
+                  </summary>
+                  <p style={{ margin: "0em 0.7em", color: "#ccc", fontSize: "0.9em", }}>{player.status === "not out" ? "" : player.status}</p>
+
+                  <div style={{ margin: "0em 0.7em", display: "flex", justifyContent: "space-around", textAlign: "center" }}>
+                    {
+                      arrayDisplay
+                        .filter((data) => data !== "5")
+                        .map((data, id) => {
+                          return (
+                            <div key={id} style={{ borderLeft: "3px solid #ccc", borderRight: "3px solid #ccc", padding: "0em 1.3em", borderRadius: "1em" }}>
+                              <span style={{ fontWeight: "600" }}>{data}s</span> <br />
+                              <span>{convertData[data]}</span>
+                            </div>
+                          )
+                        })
+                    }
+                  </div>
+
+                </details>
+              </div>
+            )
+          }
+          )
+        }
+      </div>
+    </>
+  )
+};
+
+function BowlingScoreCard({ bowlingCard, }) {
+  return (
+    <>
+      {/* bowling-card display */}
+      <h2 style={{ textAlignLast: "left" }}>Bowling Scorecard</h2>
+
+      {/* bowling-card header component */}
+      <div style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr", borderBottom: "3px solid whitesmoke", }}>
+        <span style={{ margin: "2px 0px", textAlign: "left" }}>Player</span>
+        <span style={{ margin: "2px 0px", }}>O</span>
+        <span style={{ margin: "2px 0px", }}>R</span>
+        <span style={{ margin: "2px 0px", }}>W</span>
+        <span style={{ margin: "2px 0px", }}>M</span>
+        <span style={{ margin: "2px 0px", }}>Econ</span>
+      </div>
+
+      <div>
+        {
+          bowlingCard?.map((player, id) => {
+
+            const ballsDelivered = player.runs.length;
+            const oversCount = `${Math.trunc(ballsDelivered / 6)}`;
+            const remainingBalls = ballsDelivered - (oversCount * 6)
+            const runsConceded = addRuns(player.runs);
+            const wickets = player.runs.filter(run => typeof run === "string").length;
+            const economy = (runsConceded / oversCount).toFixed(2);
+
+            const convertToChartData = convertToBowlerChartData(player.bowlerOvers);
+
+            return (
+              <details key={id} style={{ fontSize: "0.9em", borderBottom: "1px solid whitesmoke", }}>
+
+                <summary style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr", }}>
+                  <span style={{ margin: "0.7em 0em", textAlign: "left" }}>{player.playerName}</span>
+                  <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{oversCount}.{remainingBalls}</span>
+                  <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{runsConceded}</span>
+                  <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{wickets}</span>
+                  <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{player.maidens}</span>
+                  <span style={{ margin: "0.7em 0em", textAlign: "center" }}>{economy}</span>
+                </summary>
+
+                <StackedBarChart data={convertToChartData} />
+
+              </details>
+            )
+          })
+        }
+      </div>
+
+    </>
+  )
 }
