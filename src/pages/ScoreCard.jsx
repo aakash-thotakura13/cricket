@@ -75,7 +75,7 @@ function BattingScoreCard({ battingCard }) {
             return (
               <div key={id} style={{ fontSize: "0.9em", borderBottom: "1px solid whitesmoke", }}>
                 <details style={{ textAlign: "left", }} open={player.totalRuns > 50 ? true : false}>
-                  <summary style={{ margin: "0.7em 0em", display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", alignItems: "center", backgroundColor: player.totalRuns > 50 ? "#7e7e7eff" : "" }}>
+                  <summary style={{ padding: "0.7em 0.35em", display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", alignItems: "center", backgroundColor: player.totalRuns > 50 ? "#5f5d5dff" : "" }}>
                     <span style={{ textAlign: "left", }}>{player.playerName}{player.status === "not out" ? <strong>*</strong> : ""}</span>
                     <span style={{ textAlign: "right", }}>{player.totalRuns} ({player.runs.length})</span>
                     <span style={{ textAlign: "center", }}>{player.fours}</span>
@@ -111,7 +111,9 @@ function BattingScoreCard({ battingCard }) {
 };
 
 function BowlingScoreCard({ bowlingCard }) {
-  console.table(bowlingCard)
+
+  console.table(bowlingCard);
+  
   return (
     <>
       {/* bowling-card display */}
@@ -136,14 +138,14 @@ function BowlingScoreCard({ bowlingCard }) {
             const remainingBalls = ballsDelivered - (oversCount * 6)
             const runsConceded = addRuns(player.runs);
             const wickets = player.runs.filter(run => typeof run === "string").length;
-            const economy = (runsConceded / oversCount).toFixed(2);
+            const economy = (runsConceded / `${oversCount}.${remainingBalls}`).toFixed(2);
 
             const convertToChartData = convertToBowlerChartData(player.bowlerOvers);
 
             return (
               <details key={id} style={{ fontSize: "0.9em", borderBottom: "1px solid whitesmoke", }}>
 
-                <summary style={{ margin: "0.7em 0em", display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr", }}>
+                <summary style={{ padding: "0.7em 0.35em", display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr", }}>
                   <span style={{ textAlign: "left" }}>{player.playerName}</span>
                   <span style={{ textAlign: "center" }}>{oversCount}.{remainingBalls}</span>
                   <span style={{ textAlign: "center" }}>{runsConceded}</span>
