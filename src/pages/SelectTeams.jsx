@@ -51,7 +51,7 @@ export const SelectTeam = () => {
   };
 
   return (
-    <section style={{ fontSize: "0.95em" }}>
+    <section style={{ fontSize: "0.9em" }}>
 
       {
         !game
