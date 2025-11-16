@@ -1,9 +1,12 @@
-import { Bar, BarChart, Legend, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, Legend, Rectangle, Tooltip, XAxis, YAxis } from "recharts";
 
-export const SimpleBarChart = ({data}) => {
+export const SimpleBarChart = ({ data, dataKeyOne, dataKeyTwo, XAxisKey, colorOne, colorTwo }) => {
+
+  const xTicks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+
   return (
     <BarChart
-      style={{ width: '100%', maxWidth: '700px', maxHeight: '70vh', aspectRatio: 1.618 }}
+      style={{ width: '100%', maxWidth: '350px', maxHeight: '70vh', aspectRatio: 1.618 }}
       responsive
       data={data}
       margin={{
@@ -14,12 +17,21 @@ export const SimpleBarChart = ({data}) => {
       }}
     >
       {/* <CartesianGrid strokeDasharray="3 3" /> */}
-      <XAxis dataKey="name" />
+      <XAxis dataKey={XAxisKey} ticks={xTicks} />
       <YAxis width="auto" />
       <Tooltip />
-      <Legend />
-      <Bar dataKey="value" fill="#8884d8" activeBar={<Rectangle fill="blue" stroke="" />} />
-      {/* <Bar dataKey="uv" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="" />} /> */}
+      <Legend iconSize={7} />
+      <Bar
+        dataKey={dataKeyOne}
+        fill={colorOne}
+        activeBar={<Rectangle />}
+        />
+      <Bar
+        dataKey={dataKeyTwo}
+        fill={colorTwo}
+        activeBar={<Rectangle />}
+      />
+
     </BarChart>
   )
 };
