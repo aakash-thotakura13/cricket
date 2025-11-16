@@ -84,21 +84,19 @@ export const Pitch = ({
 
 
   useEffect(() => {
-
     if (_overRuns.length === 6) {
       const updatedArray = updateOver(_bowler, bowlingCard, _overRuns);
       setBowlingCard(updatedArray);
       overUp();
     }
-
   }, [_overRuns]);
 
+
   useEffect(() => {
-    if (allOvers.length === 5) {
+    if (allOvers.length === 20) {
       inningUp();
     }
   }, [allOvers]);
-
 
 
   function game() {
