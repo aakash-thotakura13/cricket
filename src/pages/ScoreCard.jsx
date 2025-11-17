@@ -136,9 +136,9 @@ function BowlingScoreCard({ bowlingCard }) {
             const ballsDelivered = player.runs.length;
             const oversCount = `${Math.trunc(ballsDelivered / 6)}`;
             const remainingBalls = ballsDelivered - (oversCount * 6)
-            const runsConceded = addRuns(player.runs);
+            const totalRuns = addRuns(player.runs);
             const wickets = player.runs.filter(run => typeof run === "string").length;
-            const economy = (runsConceded / `${oversCount}.${remainingBalls}`).toFixed(2);
+            const economy = (totalRuns / `${oversCount}.${remainingBalls}`).toFixed(2);
 
             const convertToChartData = convertToBowlerChartData(player.bowlerOvers);
 
@@ -148,7 +148,7 @@ function BowlingScoreCard({ bowlingCard }) {
                 <summary style={{ padding: "0.7em 0.35em", display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr", }}>
                   <span style={{ textAlign: "left" }}>{player.playerName}</span>
                   <span style={{ textAlign: "center" }}>{oversCount}.{remainingBalls}</span>
-                  <span style={{ textAlign: "center" }}>{runsConceded}</span>
+                  <span style={{ textAlign: "center" }}>{totalRuns}</span>
                   <span style={{ textAlign: "center" }}>{wickets}</span>
                   <span style={{ textAlign: "center" }}>{player.maidens}</span>
                   <span style={{ textAlign: "center" }}>{economy}</span>
