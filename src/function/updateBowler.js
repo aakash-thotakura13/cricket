@@ -4,17 +4,17 @@ export function updateBowler(run, _bowler, bowlingCard) {
   
   const runs = [..._bowler.runs, run];
   const ballsDelivered = runs.length;
-  const runsConceded = addRuns(runs);
+  const totalRuns = addRuns(runs);
   const oversCount = ballsDelivered / 6;
   const deliveries = ballsDelivered - oversCount * 6;
   const wickets = _bowler.runs.filter((run) => typeof run === "string").length;
-  const economy = (runsConceded / ballsDelivered).toFixed(2);
+  const economy = (totalRuns / ballsDelivered).toFixed(2);
   const maidens = _bowler.bowlerOvers.map(over => addRuns(over)).filter(over => over === 0).length;
 
   const bowlerEntry = {
     ..._bowler,
     runs,
-    runsConceded,
+    totalRuns,
     overs: `${oversCount}.${deliveries}`,
     wickets,
     economy,
