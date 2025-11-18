@@ -29,3 +29,13 @@ details,
 summary {
   cursor: pointer;
 }
+
+.details-content {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.35s ease;
+}
+
+details[open] .details-content {
+  max-height: 500px;
+}
