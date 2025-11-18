@@ -1,10 +1,11 @@
 import { createBrowserRouter } from "react-router";
 import App from "../App";
-import { SelectTeam } from "../pages/SelectTeams";
-import { ScoreCard } from "../pages/ScoreCard";
-import { OverDetails } from "../pages/OverDetails";
+import { SelectTeam   } from "../pages/SelectTeams";
+import { ScoreCard    } from "../pages/ScoreCard";
+import { OverDetails  } from "../pages/OverDetails";
 import { Partnerships } from "../pages/Partnerships";
-import { Graphs } from "../pages/Graphs";
+import { Graphs       } from "../pages/Graphs";
+import { Comparison   } from "../pages/Comparison";
 
 
 export const allRoutes = createBrowserRouter([
@@ -34,7 +35,7 @@ export const allRoutes = createBrowserRouter([
       },
       {
         path: "/comparison",
-        element: <>Comparisons</>
+        element: <Comparison />
       },
     ],
   }
