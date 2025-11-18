@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useAtom } from "jotai";
 
 // states
@@ -70,150 +70,231 @@ export const ScoreCard = () => {
 
     </div>
   )
-}
+};
+
 
 function BattingComponent({ battingScoreCard, battingTeam, allDeliveries }) {
 
-  const battingCardBatsmanPlayerName = [...battingScoreCard].map(player => player.playerName);
-  const selectedBattingTeam = battingTeam.teamMembers;
+  const battingNames = battingScoreCard?.map(p => p.playerName);
+  const remainingPlayers =
+    battingTeam.teamMembers?.filter(name => !battingNames.includes(name)) || [];
 
-  const remainingPlayers = selectedBattingTeam?.filter(player => !battingCardBatsmanPlayerName.includes(player)) || [];
 
-  const totalRuns = addRuns(allDeliveries);
-  const totalWickets = wicketsCounter(allDeliveries);
+  const totalRuns = useMemo(
+    () => addRuns(allDeliveries),
+    [allDeliveries]
+  );
 
+  const totalWickets = useMemo(
+    () => wicketsCounter(allDeliveries),
+    [allDeliveries]
+  );
 
   return (
     <>
-      {/* batting-card display */}
       <h2 style={{ textAlignLast: "left" }}>Batting Scorecard</h2>
 
-      {/* batting-card header component */}
-      <div style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", borderBottom: "3px solid whitesmoke", }}>
-        <span style={{ margin: "2px 0px", textAlign: "left" }}>Player</span>
-        <span style={{ margin: "2px 0px", }}>Runs</span>
-        <span style={{ margin: "2px 0px", }}>4s</span>
-        <span style={{ margin: "2px 0px", }}>6s</span>
-        <span style={{ margin: "2px 0px", }}>SR</span>
-      </div>
+      <BattingHeader />
 
       <div>
-        {
-          battingScoreCard?.map((player, id) => {
+        {battingScoreCard.map((player, idx) => (
+          <BattingRow key={idx} player={player} />
+        ))}
+      </div>
 
-            const convertData = countOccurrences(player.runs)
-            const arrayDisplay = Object.keys(convertData);
+      <TotalScore totalRuns={totalRuns} totalWickets={totalWickets} />
 
-            return (
-              <div key={id} style={{ fontSize: "0.9em", borderBottom: "1px solid whitesmoke", }}>
-                <details style={{ textAlign: "left", }} open={player.totalRuns > 50 ? true : false}>
-                  <summary style={{ padding: "0.7em 0.35em", display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr", alignItems: "center", backgroundColor: player.totalRuns > 50 ? "#5f5d5dff" : "" }}>
-                    <span style={{ textAlign: "left", }}>{player.playerName}{player.status === "not out" ? <strong>*</strong> : ""}</span>
-                    <span style={{ textAlign: "right", }}>{player.totalRuns} ({player.runs.length})</span>
-                    <span style={{ textAlign: "center", }}>{player.fours}</span>
-                    <span style={{ textAlign: "center", }}>{player.sixes}</span>
-                    <span style={{ textAlign: "center", }}>{player.strikeRate}</span>
-                  </summary>
-                  <p style={{ margin: "0em 0.7em", color: "#ccc", fontSize: "0.9em", }}>{player.status === "not out" ? "" : player.status}</p>
+      <YetToBat players={remainingPlayers} />
+    </>
+  );
+}
 
-                  <div style={{ margin: "0em 0.7em", display: "flex", justifyContent: "space-around", textAlign: "center" }}>
-                    {
-                      arrayDisplay
-                        .filter((data) => data !== "5")
-                        .map((data, id) => {
-                          return (
-                            <div key={id} style={{ borderLeft: "3px solid #ccc", borderRight: "3px solid #ccc", padding: "0em 1.3em", borderRadius: "1em" }}>
-                              <span style={{ fontWeight: "600" }}>{data}s</span> <br />
-                              <span>{convertData[data]}</span>
-                            </div>
-                          )
-                        })
-                    }
-                  </div>
+const BattingHeader = () => {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr",
+        borderBottom: "3px solid whitesmoke",
+      }}>
+      <span style={{ margin: "2px 0px", textAlign: "left" }}>Player</span>
+      <span style={{ margin: "2px 0px", }}>Runs</span>
+      <span style={{ margin: "2px 0px", }}>4s</span>
+      <span style={{ margin: "2px 0px", }}>6s</span>
+      <span style={{ margin: "2px 0px", }}>SR</span>
+    </div>
+  )
+}
 
-                </details>
-              </div>
+const BattingRow = ({ player }) => {
+  const convertedData = useMemo(
+    () => countOccurrences(player.runs),
+    [player.runs]
+  );
+
+  const shotTypes = Object.keys(convertedData).filter(r => r !== 5);
+
+  return (
+    <div style={{ fontSize: "0.9em", borderbottom: "1px solit whitesmoke", }}>
+      <details
+        defaultOpen={player.totalRuns > 50}
+        style={{
+          fontSize: "0.9em",
+          borderBottom: "1px solid whitesmoke",
+          padding: "0.3em 0"
+        }}>
+        <summary
+          style={{
+            display: "grid",
+            gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr",
+            padding: "0.7em 0.35em",
+            backgroundColor: player.totalRuns > 50 ? "#3c3c3ccc" : "#1c1c1c",
+            borderRadius: "6px",
+          }}>
+          <span style={{ textAlign: "left", }}>
+            {player.playerName} &nbsp;
+            {player.status === "not out" && <strong>*</strong>}
+          </span>
+          <span>{player.totalRuns} ({player.runs.length})</span>
+          <span>{player.fours}</span>
+          <span>{player.sixes}</span>
+          <span>{isNaN(player.strikeRate) ? "0.00" : player.strikeRate}</span>
+        </summary>
+
+        <div className="details-content" style={{ padding: "0.75em 0.5em" }}>
+          {/* OUT info */}
+          {
+            player.status !== "not out" && (
+              <p style={{ color: "#ccc", fontSize: "0.9em" }}>
+                {player.status}
+              </p>
             )
           }
-          )
-        }
-      </div>
-
-      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1.45em", margin: "1em 0em", fontWeight: "700" }}>
-        <p>Total Score</p>
-        <p>
-          <span>{totalRuns}</span> / <span>{totalWickets}</span>
-        </p>
-      </div>
-
-      {/* remaining team members */}
-      <div style={{ textAlign: "left", margin: "1em 0em" }}>
-        <p style={{ fontWeight: "bold", fontSize: "1.1em", }}><em>Yet to Bat</em></p>
-        <div style={{ display: "flex", fontSize: "0.95em", flexWrap: "wrap", }}>
-          {
-            remainingPlayers?.map((player, id) => {
-              return (
-                <p key={id}>{player},&nbsp;</p>
-              )
-            })
-          }
         </div>
-      </div>
 
-    </>
+        {/* shots breakdown */}
+        <div
+          style={{
+            marginTop: "0.4em",
+            display: "flex",
+            justifyContent: "space-around",
+          }}>
+          {shotTypes.map((runType, id) => (
+            <div
+              key={id}
+              style={{
+                borderLeft: "2px solid #ccc",
+                borderRight: "2px solid #ccc",
+                padding: "0em 1.2em",
+                borderRadius: "1em",
+              }}>
+              <span style={{ fontWeight: "600" }}>{runType}s</span> <br />
+              <span>{convertedData[runType]}</span>
+            </div>
+          ))}
+        </div>
+
+      </details>
+    </div>
   )
 };
+
+const TotalScore = ({ totalRuns, totalWickets }) => (
+  <div style={{
+    display: "flex",
+    justifyContent: "space-between",
+    fontSize: "1.45em",
+    margin: "1em 0em",
+    fontWeight: "700"
+  }}>
+    <p>Total Score</p>
+    <p>{totalRuns} / {totalWickets}</p>
+  </div>
+);
+
+const YetToBat = ({ players }) => (
+  <div style={{ textAlign: "left", margin: "1em 0em" }}>
+    <p style={{ fontWeight: "bold", fontSize: "1.1em" }}><em>Yet to Bat</em></p>
+    <div style={{ display: "flex", flexWrap: "wrap", fontSize: "0.95em" }}>
+      {players.map((p, idx) => (
+        <p key={idx}>{p},&nbsp;</p>
+      ))}
+    </div>
+  </div>
+);
+
+
 
 function BowlingComponent({ bowlingScoreCard }) {
 
   return (
     <>
-      {/* bowling-card display */}
       <h2 style={{ textAlignLast: "left" }}>Bowling Scorecard</h2>
 
-      {/* bowling-card header component */}
-      <div style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr", borderBottom: "3px solid whitesmoke", }}>
-        <span style={{ margin: "2px 0px", textAlign: "left" }}>Player</span>
-        <span style={{ margin: "2px 0px", }}>O</span>
-        <span style={{ margin: "2px 0px", }}>R</span>
-        <span style={{ margin: "2px 0px", }}>W</span>
-        <span style={{ margin: "2px 0px", }}>M</span>
-        <span style={{ margin: "2px 0px", }}>Econ</span>
-      </div>
+      <BowlingHeader />
 
       <div>
-        {
-          bowlingScoreCard?.map((player, id) => {
-
-            const ballsDelivered = player.runs.length;
-            const oversCount = `${Math.trunc(ballsDelivered / 6)}`;
-            const remainingBalls = ballsDelivered - (oversCount * 6)
-            const totalRuns = addRuns(player.runs);
-            const wickets = player.runs.filter(run => typeof run === "string").length;
-            const economy = (totalRuns / `${oversCount}.${remainingBalls}`).toFixed(2);
-
-            const convertToChartData = convertToBowlerChartData(player.bowlerOvers);
-
-            return (
-              <details key={id} style={{ fontSize: "0.9em", borderBottom: "1px solid whitesmoke", }}>
-
-                <summary style={{ padding: "0.7em 0.35em", display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr", }}>
-                  <span style={{ textAlign: "left" }}>{player.playerName}</span>
-                  <span style={{ textAlign: "center" }}>{oversCount}.{remainingBalls}</span>
-                  <span style={{ textAlign: "center" }}>{totalRuns}</span>
-                  <span style={{ textAlign: "center" }}>{wickets}</span>
-                  <span style={{ textAlign: "center" }}>{player.maidens}</span>
-                  <span style={{ textAlign: "center" }}>{economy}</span>
-                </summary>
-
-                <StackedBarChart data={convertToChartData} />
-
-              </details>
-            )
-          })
-        }
+        {bowlingScoreCard?.map((player, idx) => (
+          <BowlingRow key={idx} player={player} />
+        ))}
       </div>
-
     </>
-  )
+  );
+}
+
+
+const BowlingRow = ({ player }) => {
+
+  const { overs, remaining, runs, wickets, economy } = useMemo(() => {
+    const balls = player.runs.length;
+    const overs = Math.floor(balls / 6);
+    const remaining = balls % 6;
+    const runs = addRuns(player.runs);
+    const wickets = player.runs.filter(r => typeof r === "string").length;
+    const totalOvers = overs + remaining / 6;
+    const economy = totalOvers === 0 ? "0.00" : (runs / totalOvers).toFixed(2);
+
+
+    return { overs, remaining, runs, wickets, economy };
+  }, [player.runs]);
+
+  const chartData = useMemo(
+    () => convertToBowlerChartData(player.bowlerOvers),
+    [player.bowlerOvers]
+  );
+
+  return (
+    <details style={{ fontSize: "0.9em", borderBottom: "1px solid whitesmoke" }}>
+      <summary style={{
+        padding: "0.7em 0.35em",
+        display: "grid",
+        gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr",
+      }}>
+        <span style={{ textAlign: "left" }}>{player.playerName}</span>
+        <span style={{ textAlign: "center" }}>{overs}.{remaining}</span>
+        <span style={{ textAlign: "center" }}>{runs}</span>
+        <span style={{ textAlign: "center" }}>{wickets}</span>
+        <span style={{ textAlign: "center" }}>{player.maidens}</span>
+        <span style={{ textAlign: "center" }}>{economy}</span>
+      </summary>
+
+      <StackedBarChart data={chartData} />
+    </details>
+  );
 };
+
+
+const BowlingHeader = () => (
+  <div style={{
+    display: "grid",
+    gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr 1fr",
+    borderBottom: "3px solid whitesmoke"
+  }}>
+    <span style={{ textAlign: "left" }}>Player</span>
+    <span>O</span>
+    <span>R</span>
+    <span>W</span>
+    <span>M</span>
+    <span>Econ</span>
+  </div>
+);
