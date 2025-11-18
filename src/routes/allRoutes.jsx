@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router";
 import App from "../App";
-import { SelectTeam   } from "../pages/SelectTeams";
+import { SelectTeam   } from "../pages/SelectTeam";
 import { ScoreCard    } from "../pages/ScoreCard";
 import { OverDetails  } from "../pages/OverDetails";
 import { Partnerships } from "../pages/Partnerships";
@@ -14,27 +14,27 @@ export const allRoutes = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/select",
+        path: "select",
         element: <SelectTeam />,
       },
       {
-        path: "/scorecard",
+        path: "scorecard",
         element: <ScoreCard />,
       },
       {
-        path: "/partnership",
+        path: "partnership",
         element: <Partnerships />
       },
       {
-        path: "/overs",
+        path: "overs",
         element: <OverDetails />
       },
       {
-        path: "/graphs",
+        path: "graphs",
         element: <Graphs />,
       },
       {
-        path: "/comparison",
+        path: "comparison",
         element: <Comparison />
       },
     ],
