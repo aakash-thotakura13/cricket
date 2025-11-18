@@ -23,37 +23,49 @@ import wicketsCounter from "../function/wicketsCounter";
 
 export const ScoreCard = () => {
 
-  const [_teamOne, setTeamOne] = useAtom(teamOne);
-  const [_teamTwo, setTeamTwo] = useAtom(teamTwo);
+  const [_teamOne] = useAtom(teamOne);
+  const [_teamTwo] = useAtom(teamTwo);
 
-  const [_inningsOneBattingScoreCard, setInningsOneBattingScoreCard] = useAtom(inningsOneBattingScoreCard);
-  const [_inningsOneBowlingScoreCard, setInningsOneBowlingScoreCard] = useAtom(inningsOneBowlingScoreCard);
+  const [_inningsOneBattingScoreCard] = useAtom(inningsOneBattingScoreCard);
+  const [_inningsOneBowlingScoreCard] = useAtom(inningsOneBowlingScoreCard);
 
-  const [_inningsTwoBattingScoreCard, setInningsTwoBattingScoreCard] = useAtom(inningsTwoBattingScoreCard);
-  const [_inningsTwoBowlingScoreCard, setInningsTwoBowlingScoreCard] = useAtom(inningsTwoBowlingScoreCard);
+  const [_inningsTwoBattingScoreCard] = useAtom(inningsTwoBattingScoreCard);
+  const [_inningsTwoBowlingScoreCard] = useAtom(inningsTwoBowlingScoreCard);
 
-  const [_inningsOneScore, setInningsOneScore] = useAtom(inningsOneScore)
-  const [_inningsTwoScore, setInningsTwoScore] = useAtom(inningsTwoScore)
+  const [_inningsOneScore] = useAtom(inningsOneScore)
+  const [_inningsTwoScore] = useAtom(inningsTwoScore)
 
   const [displayInnings, setDisplayInnings] = useState(true);
+
+  const inningsConfig = displayInnings
+    ? {
+      battingScoreCard: _inningsOneBattingScoreCard,
+      bowlingScoreCard: _inningsOneBowlingScoreCard,
+      battingTeam: _teamOne,
+      allDeliveries: _inningsOneScore
+    }
+    : {
+      battingScoreCard: _inningsTwoBattingScoreCard,
+      bowlingScoreCard: _inningsTwoBowlingScoreCard,
+      battingTeam: _teamTwo,
+      allDeliveries: _inningsTwoScore
+    };
 
   return (
     <div>
       <PageTitle title="Scorecard" />
       <PageNavBar displayInnings={displayInnings} setDisplayInnings={setDisplayInnings} />
 
-      <div style={{ fontSize: "0.8em", }}>
-        {
-          displayInnings
-            ? <>
-              <BattingComponent battingScoreCard={_inningsOneBattingScoreCard} battingTeam={_teamOne} allDeliveries={_inningsOneScore} />
-              <BowlingComponent bowlingScoreCard={_inningsOneBowlingScoreCard} />
-            </>
-            : <>
-              <BattingComponent battingScoreCard={_inningsTwoBattingScoreCard} battingTeam={_teamTwo} allDeliveries={_inningsTwoScore} />
-              <BowlingComponent bowlingScoreCard={_inningsTwoBowlingScoreCard} />
-            </>
-        }
+      <div style={{ fontSize: "0.8em" }}>
+        <BattingComponent
+          battingScoreCard={inningsConfig.battingScoreCard}
+          battingTeam={inningsConfig.battingTeam}
+          allDeliveries={inningsConfig.allDeliveries}
+        />
+
+        <BowlingComponent
+          bowlingScoreCard={inningsConfig.bowlingScoreCard}
+        />
       </div>
 
     </div>
