@@ -1,8 +1,13 @@
 import { useState } from "react";
-import { useAtom } from "jotai"
+import { useAtom } from "jotai";
 
 // states
-import { inningsOneBattingScoreCard, inningsOneBowlingScoreCard, inningsTwoBattingScoreCard, inningsTwoBowlingScoreCard } from "../jotai/atom"
+import {
+  teamOne, teamTwo,
+  inningsOneBattingScoreCard, inningsOneBowlingScoreCard,
+  inningsTwoBattingScoreCard, inningsTwoBowlingScoreCard,
+  inningsOneScore, inningsTwoScore,
+} from "../jotai/atom";
 
 // components
 import { StackedBarChart } from "../components/chart/StackedBarChart";
@@ -13,15 +18,22 @@ import { PageNavBar } from "../components/PageNavBar";
 import addRuns from "../function/addRuns";
 import { countOccurrences } from "../function/countOccurrences";
 import { convertToBowlerChartData } from "../function/convertToBowlerChartData";
+import wicketsCounter from "../function/wicketsCounter";
 
 
 export const ScoreCard = () => {
+
+  const [_teamOne, setTeamOne] = useAtom(teamOne);
+  const [_teamTwo, setTeamTwo] = useAtom(teamTwo);
 
   const [_inningsOneBattingScoreCard, setInningsOneBattingScoreCard] = useAtom(inningsOneBattingScoreCard);
   const [_inningsOneBowlingScoreCard, setInningsOneBowlingScoreCard] = useAtom(inningsOneBowlingScoreCard);
 
   const [_inningsTwoBattingScoreCard, setInningsTwoBattingScoreCard] = useAtom(inningsTwoBattingScoreCard);
   const [_inningsTwoBowlingScoreCard, setInningsTwoBowlingScoreCard] = useAtom(inningsTwoBowlingScoreCard);
+
+  const [_inningsOneScore, setInningsOneScore] = useAtom(inningsOneScore)
+  const [_inningsTwoScore, setInningsTwoScore] = useAtom(inningsTwoScore)
 
   const [displayInnings, setDisplayInnings] = useState(true);
 
@@ -34,12 +46,12 @@ export const ScoreCard = () => {
         {
           displayInnings
             ? <>
-              <BattingScoreCard battingCard={_inningsOneBattingScoreCard} />
-              <BowlingScoreCard bowlingCard={_inningsOneBowlingScoreCard} />
+              <BattingComponent battingScoreCard={_inningsOneBattingScoreCard} battingTeam={_teamOne} allDeliveries={_inningsOneScore} />
+              <BowlingComponent bowlingScoreCard={_inningsOneBowlingScoreCard} />
             </>
             : <>
-              <BattingScoreCard battingCard={_inningsTwoBattingScoreCard} />
-              <BowlingScoreCard bowlingCard={_inningsTwoBowlingScoreCard} />
+              <BattingComponent battingScoreCard={_inningsTwoBattingScoreCard} battingTeam={_teamTwo} allDeliveries={_inningsTwoScore} />
+              <BowlingComponent bowlingScoreCard={_inningsTwoBowlingScoreCard} />
             </>
         }
       </div>
@@ -48,9 +60,17 @@ export const ScoreCard = () => {
   )
 }
 
-function BattingScoreCard({ battingCard }) {
-  console.clear()
-  console.table(battingCard)
+function BattingComponent({ battingScoreCard, battingTeam, allDeliveries }) {
+
+  const battingCardBatsmanPlayerName = [...battingScoreCard].map(player => player.playerName);
+  const selectedBattingTeam = battingTeam.teamMembers;
+
+  const remainingPlayers = selectedBattingTeam?.filter(player => !battingCardBatsmanPlayerName.includes(player)) || [];
+
+  const totalRuns = addRuns(allDeliveries);
+  const totalWickets = wicketsCounter(allDeliveries);
+
+
   return (
     <>
       {/* batting-card display */}
@@ -67,7 +87,7 @@ function BattingScoreCard({ battingCard }) {
 
       <div>
         {
-          battingCard?.map((player, id) => {
+          battingScoreCard?.map((player, id) => {
 
             const convertData = countOccurrences(player.runs)
             const arrayDisplay = Object.keys(convertData);
@@ -106,14 +126,34 @@ function BattingScoreCard({ battingCard }) {
           )
         }
       </div>
+
+      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1.45em", margin: "1em 0em", fontWeight: "700" }}>
+        <p>Total Score</p>
+        <p>
+          <span>{totalRuns}</span> / <span>{totalWickets}</span>
+        </p>
+      </div>
+
+      {/* remaining team members */}
+      <div style={{ textAlign: "left", margin: "1em 0em" }}>
+        <p style={{ fontWeight: "bold", fontSize: "1.1em", }}><em>Yet to Bat</em></p>
+        <div style={{ display: "flex", fontSize: "0.95em", flexWrap: "wrap", }}>
+          {
+            remainingPlayers?.map((player, id) => {
+              return (
+                <p key={id}>{player},&nbsp;</p>
+              )
+            })
+          }
+        </div>
+      </div>
+
     </>
   )
 };
 
-function BowlingScoreCard({ bowlingCard }) {
+function BowlingComponent({ bowlingScoreCard }) {
 
-  console.table(bowlingCard);
-  
   return (
     <>
       {/* bowling-card display */}
@@ -131,7 +171,7 @@ function BowlingScoreCard({ bowlingCard }) {
 
       <div>
         {
-          bowlingCard?.map((player, id) => {
+          bowlingScoreCard?.map((player, id) => {
 
             const ballsDelivered = player.runs.length;
             const oversCount = `${Math.trunc(ballsDelivered / 6)}`;
@@ -164,4 +204,4 @@ function BowlingScoreCard({ bowlingCard }) {
 
     </>
   )
-}
+};
