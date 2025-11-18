@@ -1,7 +1,11 @@
 import { useAtom } from "jotai"
 
 // states
-import { inningsOne, inningsOneBattingScoreCard, inningsOneBowlingScoreCard, inningsOneAllOvers, inningsOnePartnershipCard, inningsTwo, inningsTwoBattingScoreCard, inningsTwoBowlingScoreCard, inningsTwoAllOvers, inningsTwoPartnershipCard, startGame, teamOne, teamTwo } from "../jotai/atom"
+import {
+  inningsOne, inningsOneBattingScoreCard, inningsOneBowlingScoreCard, inningsOneAllOvers, inningsOnePartnershipCard,
+  inningsTwo, inningsTwoBattingScoreCard, inningsTwoBowlingScoreCard, inningsTwoAllOvers, inningsTwoPartnershipCard,
+  startGame, teamOne, teamTwo
+} from "../jotai/atom"
 
 // database
 import { australia2025, india2025, indianW, southAfricaW } from "../database"
@@ -33,22 +37,50 @@ export const SelectTeam = () => {
   const [game, setGame] = useAtom(startGame);
 
 
-  function teamSelection(selectedTeam) {
+  const teamSelection = (selectedTeam) => {
 
-    const teamOneEmpty = !_teamOne || Object.keys(_teamOne).length === 0;
-    const teamTwoEmpty = !_teamTwo || Object.keys(_teamTwo).length === 0;
+    if (_teamOne?.teamName === selectedTeam.teamName || _teamTwo?.teamName === selectedTeam.teamName) return;
 
-    if (!teamOneEmpty && !teamTwoEmpty) {
-      return alert("Select only one team");
-    }
+    if (!_teamOne?.teamName) return setTeamOne(selectedTeam);
+    if (!_teamTwo?.teamName) return setTeamTwo(selectedTeam);
 
-    if (teamOneEmpty) {
-      setTeamOne(selectedTeam);
-    } else if (teamTwoEmpty) {
-      setTeamTwo(selectedTeam);
-    }
+    alert("Both teams are already selected");
 
   };
+
+  const isFirstInnings = !_inningsOneStatus;
+
+  const inningsConfig = isFirstInnings
+    ? {
+      battingTeam: _teamOne,
+      setBattingTeam: setTeamOne,
+      bowlingTeam: _teamTwo,
+      setBowlingTeam: setTeamTwo,
+      battingCard: _inningsOneBattingScoreCard,
+      setBattingCard: setInningsOneBattingScoreCard,
+      bowlingCard: _inningsOneBowlingScoreCard,
+      setBowlingCard: setInningsOneBowlingScoreCard,
+      partnershipData: _inningsOnePartnershipCard,
+      setPartnershipData: setInningsOnePartnershipCard,
+      allOvers: _inningsOneAllovers,
+      setAllOvers: setInningsOneAllOvers,
+      setStatus: setInningsOneStatus,
+    } : {
+      battingTeam: _teamTwo,
+      setBattingTeam: setTeamTwo,
+      bowlingTeam: _teamOne,
+      setBowlingTeam: setTeamOne,
+      battingCard: _inningsTwoBattingScoreCard,
+      setBattingCard: setInningsTwoBattingScoreCard,
+      bowlingCard: _inningsTwoBowlingScoreCard,
+      setBowlingCard: setInningsTwoBowlingScoreCard,
+      partnershipData: _inningsTwoPartnershipCard,
+      setPartnershipData: setInningsTwoPartnershipCard,
+      allOvers: _inningsTwoAllovers,
+      setAllOvers: setInningsTwoAllOvers,
+      setStatus: setInningsTwoStatus,
+    };
+
 
   return (
     <section style={{ fontSize: "0.9em" }}>
@@ -96,44 +128,8 @@ export const SelectTeam = () => {
                 </div>
             }
           </>
-          : <>
-            {
-              !_inningsOneStatus
-                ? <Pitch
-                  battingTeam={_teamOne}
-                  setBattingTeam={setTeamOne}
-                  bowlingTeam={_teamTwo}
-                  setBowlingTeam={setTeamTwo}
-                  battingCard={_inningsOneBattingScoreCard}
-                  setBattingCard={setInningsOneBattingScoreCard}
-                  bowlingCard={_inningsOneBowlingScoreCard}
-                  setBowlingCard={setInningsOneBowlingScoreCard}
-                  partnershipData={_inningsOnePartnershipCard}
-                  setPartnershipData={setInningsOnePartnershipCard}
-                  allOvers={_inningsOneAllovers}
-                  setAllOvers={setInningsOneAllOvers}
-                  setStatus={setInningsOneStatus}
-                />
-                : <Pitch
-                  battingTeam={_teamTwo}
-                  setBattingTeam={setTeamTwo}
-                  bowlingTeam={_teamOne}
-                  setBowlingTeam={setTeamOne}
-                  battingCard={_inningsTwoBattingScoreCard}
-                  setBattingCard={setInningsTwoBattingScoreCard}
-                  bowlingCard={_inningsTwoBowlingScoreCard}
-                  setBowlingCard={setInningsTwoBowlingScoreCard}
-                  partnershipData={_inningsTwoPartnershipCard}
-                  setPartnershipData={setInningsTwoPartnershipCard}
-                  allOvers={_inningsTwoAllovers}
-                  setAllOvers={setInningsTwoAllOvers}
-                  setStatus={setInningsTwoStatus}
-                />
-            }
-          </>
+          : <Pitch {...inningsConfig} />
       }
-
     </section>
-
   )
 }
