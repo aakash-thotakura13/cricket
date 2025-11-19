@@ -41,7 +41,7 @@ export const Overview = () => {
 function InningsOverView({ battingCard, bowlingCard, battingTeamName, bowlingTeamName, oversArray }) {
 
   const filterBatsman = battingCard?.length > 0 && [...battingCard]?.sort((a, b) => b.totalRuns - a.totalRuns)?.slice(0, 3) || [];
-  const filterBowler = bowlingCard?.length > 0 && [...bowlingCard]?.sort((a, b) => b.totalRuns - a.totalRuns)?.sort((a, b) => b.wickets - a.wickets)?.slice(0, 3) || [];
+  const filterBowler = bowlingCard?.length > 0 && [...bowlingCard]?.sort((a, b) => b.wickets - a.wickets)?.sort((a, b) => a.totalRuns - b.totalRuns)?.slice(0, 3) || [];
 
   const runsFlatArray = oversArray.map(over => over.overRuns).flat();
   const score = addRuns(runsFlatArray);
