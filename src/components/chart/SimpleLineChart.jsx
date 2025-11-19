@@ -1,24 +1,54 @@
-import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import {
+  LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid
+} from "recharts";
+import { chartColors } from "../../chartColors";
+import ChartGradients from "./ChartGradients";
 
+export const SimpleLineChart = ({
+  data,
+  dataKeyOne,
+  dataKeyTwo,
+  xAxisKey,
+  title,
+}) => {
 
-export function SimpleLineChart({ data, dataKeyOne, dataKeyTwo, XAxisKey, colorOne, colorTwo }) {
-
-  const xTicks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+  const overs = data?.map(d => d[xAxisKey]);
+  const min = Math.min(...overs);
+  const max = Math.max(...overs);
+  const step = Math.ceil((max - min) / 10) || 1;
+  const ticks = [];
+  for (let i = min; i <= max; i += step) ticks.push(i);
 
   return (
-    <div style={{ width: "100%", maxWidth: "350px", margin: "auto", }}>
-      <ResponsiveContainer width="100%" aspect={1.4}>
-        <LineChart
-          data={data}
-          margin={{ top: 5, right: 0, left: 0, bottom: 5, }}
-        >
-          {/* <CartesianGrid strokeDasharray="3 3" /> */}
-          <XAxis dataKey={XAxisKey} ticks={xTicks} />
-          <YAxis width="auto" />
+    <div style={{ width: "100%", margin: "20px auto" }}>
+      <h3 style={{ textAlign: "center", marginBottom: "10px" }}>{title}</h3>
+
+      <ResponsiveContainer width="100%" height={250}>
+        <LineChart data={data} margin={{ top: 10, bottom: 10 }}>
+          <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+
+          <XAxis dataKey={xAxisKey} ticks={ticks} allowDecimals={false} />
+          <YAxis />
           <Tooltip />
-          <Legend />
-          <Line type="linear" dataKey={dataKeyOne} stroke={colorOne} dot={false} />
-          <Line type="linear" dataKey={dataKeyTwo} stroke={colorTwo} dot={false} />
+          <Legend verticalAlign="bottom" height={36} />
+
+          <Line
+            type="monotone"
+            dataKey={dataKeyOne}
+            stroke={chartColors.one}
+            strokeWidth={2.4}
+            dot={{ r: 3 }}
+            activeDot={{ r: 6 }}
+          />
+
+          <Line
+            type="monotone"
+            dataKey={dataKeyTwo}
+            stroke={chartColors.two}
+            strokeWidth={2.4}
+            dot={{ r: 3 }}
+            activeDot={{ r: 6 }}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>
