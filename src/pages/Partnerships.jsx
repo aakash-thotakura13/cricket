@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useAtom } from "jotai"
 
 // states
@@ -12,12 +12,11 @@ import { PageNavBar } from "../components/PageNavBar";
 // functions
 import addRuns from "../function/addRuns";
 
-
 export function Partnerships() {
 
-  const [_activePartnership, setActivePartnership] = useAtom(activePartnership);
-  const [_inningsOnePartnershipCard, setInningsOnePartnershipCard] = useAtom(inningsOnePartnershipCard);
-  const [_inningsTwoPartnershipCard, setInningsTwoPartnershipCard] = useAtom(inningsTwoPartnershipCard);
+  const [_activePartnership] = useAtom(activePartnership);
+  const [_inningsOnePartnershipCard] = useAtom(inningsOnePartnershipCard);
+  const [_inningsTwoPartnershipCard] = useAtom(inningsTwoPartnershipCard);
 
   const [displayInnings, setDisplayInnings] = useState(true);
   const activePartnershipDisplayStatus = Object.keys(_activePartnership).length > 0;
@@ -56,22 +55,34 @@ function AllPartnerships({ partnerships }) {
 
 function ActivePartnership({ singlePartnership }) {
 
-  const partnerOneName = singlePartnership?.partnerOne?.playerName;
-  const partnerOneRuns = addRuns(singlePartnership?.partnerOne?.runs) || 0;
-  const partnerOneTotalDeliveries = singlePartnership?.partnerOne?.runs?.length || 0;
+  const {
+    partnerOneName, partnerOneRuns, partnerOneBalls,
+    partnerTwoName, partnerTwoRuns, partnerTwoBalls,
+    totalRuns, totalBalls, strikeRate, chartData
+  } = useMemo(() => {
 
-  const partnerTwoName = singlePartnership?.partnerTwo?.playerName;
-  const partnerTwoRuns = addRuns(singlePartnership?.partnerTwo?.runs) || 0;
-  const partnerTwoTotalDeliveries = singlePartnership?.partnerTwo?.runs?.length || 0;
+    const partnerOneRuns = addRuns(singlePartnership?.partnerOne?.runs || []);
+    const partnerOneBalls = singlePartnership?.partnerOne?.runs?.length || 0;
 
-  const totalRuns = partnerOneRuns + partnerTwoRuns;
-  const totalDeliveries = partnerOneTotalDeliveries + partnerTwoTotalDeliveries;
-  const strikeRate = ((totalRuns / totalDeliveries) * 100).toFixed(2);
+    const partnerTwoRuns = addRuns(singlePartnership?.partnerTwo?.runs || []);
+    const partnerTwoBalls = singlePartnership?.partnerTwo?.runs?.length || 0;
 
-  const chartData = [
-    { name: partnerOneName, value: partnerOneRuns },
-    { name: partnerTwoName, value: partnerTwoRuns },
-  ];
+    const totalRuns = partnerOneRuns + partnerTwoRuns;
+    const totalBalls = partnerOneBalls + partnerTwoBalls;
+
+    return {
+      partnerOneName: singlePartnership?.partnerOne?.playerName,
+      partnerOneRuns, partnerOneBalls,
+      partnerTwoName: singlePartnership?.partnerTwo?.playerName,
+      partnerTwoRuns, partnerTwoBalls,
+      totalRuns, totalBalls,
+      strikeRate: totalBalls ? ((totalRuns / totalBalls) * 100).toFixed(2) : "0.00",
+      chartData: [
+        { name: singlePartnership?.partnerOne?.playerName, value: partnerOneRuns },
+        { name: singlePartnership?.partnerTwo?.playerName, value: partnerTwoRuns },
+      ]
+    }
+  }, [singlePartnership]);
 
 
   return (
@@ -79,20 +90,14 @@ function ActivePartnership({ singlePartnership }) {
 
       <summary style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 1.5fr", gap: "0.5em", alignItems: "center", }}>
 
-        <div style={{ textAlign: "left", }}>
-          <p>{partnerOneName}</p>
-          <p>{partnerOneRuns} ({partnerOneTotalDeliveries})</p>
-        </div>
+        <PlayerDisplay name={partnerOneName} runs={partnerOneRuns} balls={partnerOneBalls} alignment="left" />
 
         <div style={{ backgroundColor: "#ccc", color: "black", padding: "0em", borderRadius: "1em", width: "100px", aspectRatio: "1.2/1", placeContent: "center", placeItems: "center", }}>
-          <p style={{ padding: "0em", margin: "0em 0em 0.5em", fontWeight: "bold", fontSize: "1.5em", }}>{totalRuns} ({totalDeliveries})</p>
+          <p style={{ padding: "0em", margin: "0em 0em 0.5em", fontWeight: "bold", fontSize: "1.5em", }}>{totalRuns} ({totalBalls})</p>
           <p style={{ fontWeight: "bold", fontSize: "0.95em", color: "#5f5f5fff", }}>{strikeRate}</p>
         </div>
 
-        <div style={{ textAlign: "right", }}>
-          <p>{partnerTwoName}</p>
-          <p>{partnerTwoRuns} ({partnerTwoTotalDeliveries})</p>
-        </div>
+        <PlayerDisplay name={partnerTwoName} runs={partnerTwoRuns} balls={partnerTwoBalls} alignment="right" />
 
       </summary>
 
@@ -101,3 +106,10 @@ function ActivePartnership({ singlePartnership }) {
     </details>
   )
 };
+
+const PlayerDisplay = ({name, runs, balls, alignment}) => (
+  <div style={{ textAlign: alignment, }}>
+    <p>{name}</p>
+    <p>{runs} ({balls})</p>
+  </div>
+)
