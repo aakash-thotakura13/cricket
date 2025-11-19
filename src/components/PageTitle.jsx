@@ -1,13 +1,19 @@
 export const PageTitle = ({ title }) => {
   return (
-    <header style={{
-      backgroundColor: "#ccc",
-      color: "#777",
-      textShadow: "1px 1px 2px black",
-      borderRadius: "5em",
-      textAlign: "center",
-    }}>
-      <h1>{title}</h1>
-    </header>
-  )
+    <p
+      style={{
+        background: "#ccc",
+        color: "#444",
+        textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+        borderRadius: "2em",
+        padding: "0.1em 0em",
+        margin: "0.8em 0",
+        textAlign: "center",
+        fontSize: "1.5em",
+        fontWeight: "bold",
+      }}
+    >
+      {title}
+    </p>
+  );
 };

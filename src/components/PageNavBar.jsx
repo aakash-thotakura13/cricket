@@ -6,13 +6,13 @@ export const PageNavBar = ({ displayInnings, setDisplayInnings }) => {
     >
       <button
         onClick={() => setDisplayInnings(true)}
-        style={{ ...(displayInnings ? styles.activeStyle : styles.inactiveStyle) }}
+        style={{ ...(displayInnings ? styles.activeStyle : styles.inactiveStyle), ...styles.button }}
       >
         Innings One
       </button>
       <button
         onClick={() => setDisplayInnings(false)}
-        style={{ ...(!displayInnings ? styles.activeStyle : styles.inactiveStyle) }}
+        style={{ ...(!displayInnings ? styles.activeStyle : styles.inactiveStyle), ...styles.button }}
       >
         Innings Two
       </button>
@@ -30,8 +30,6 @@ const styles = {
   button: {
     fontSize: "0.9em",
     border: "none",
-    cursor: "pointer",
-    backgroundColor: "transparent",
     textShadow: "1px 1px 2px #aaa",
   },
   activeStyle: {
