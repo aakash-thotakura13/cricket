@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useAtom } from "jotai"
 
 // states
@@ -15,8 +15,8 @@ import wicketsCounter from "../function/wicketsCounter";
 
 export const OverDetails = () => {
 
-  const [_inningsOneAllOvers, setInningsOneAllOvers] = useAtom(inningsOneAllOvers);
-  const [_inningsTwoAllOvers, setInningsTwoAllOvers] = useAtom(inningsTwoAllOvers);
+  const [_inningsOneAllOvers] = useAtom(inningsOneAllOvers);
+  const [_inningsTwoAllOvers] = useAtom(inningsTwoAllOvers);
 
   const [displayInnings, setDisplayInnings] = useState(true);
 
@@ -38,15 +38,26 @@ export const OverDetails = () => {
 }
 
 function EachInnings({ allOvers }) {
+
+  const computeOverData = (overRuns) => {
+
+    const hasWicket = overRuns?.some(run => typeof run === "string");
+    const totalRuns = addRuns(overRuns);
+    const totalWickets = wicketsCounter(overRuns);
+
+    return { hasWicket, totalRuns, totalWickets };
+
+  }
+
   return (
     <div>
       {
         allOvers.map((entry, id) => {
 
-          const hasStringRun = entry.overRuns.some(run => typeof run === "string");
+          const overData = useMemo(() => computeOverData(entry.overRuns), [entry.overRuns]);
 
           return (
-            <details key={id} style={{ padding: "0em", margin: "0.5em 0em", border: hasStringRun ? "0.1em solid red" : "1px solid #ccc", borderRadius: "2.5em", }} open={hasStringRun}>
+            <details key={id} style={{ padding: "0em", margin: "0.5em 0em", border: overData?.hasWicket ? "0.1em solid red" : "1px solid #ccc", borderRadius: "2.5em", }} open={overData?.hasWicket}>
 
               <summary style={{ margin: "0em 0em", padding: "0.7em 1.4em 0.7em 0.7em", display: "grid", gridTemplateColumns: "1fr 3fr 1fr", alignItems: "center", gap: "1em", }}>
 
@@ -54,40 +65,25 @@ function EachInnings({ allOvers }) {
 
                 <div>
 
-                  <p style={{ textAlign: "left", background: "#ccc", color: "black", borderRadius: "0.5em 0.7em", margin: "0.5em 0em", padding: "0em 0.3em", }}>{entry.bowler.playerName}</p>
+                  <BowlerDisplay name={entry.bowler.playerName} />
 
-                  <p style={{ display: "flex", justifyContent: "space-between", margin: "0.25em 0em", padding: "0em 0.3em", }}>
-                    <span>{entry.playerOne.playerName}</span>
-                    <span>{entry.playerOne.totalRuns} ({entry.playerOne.totalDeliveries})</span>
-                  </p>
-                  <p style={{ display: "flex", justifyContent: "space-between", margin: "0.25em 0em", padding: "0em 0.3em", }}>
-                    <span>{entry.playerTwo.playerName}</span>
-                    <span>{entry.playerTwo.totalRuns} ({entry.playerTwo.totalDeliveries})</span>
-                  </p>
+                  <BatsmanDisplay name={entry.playerOne.playerName} runs={entry.playerOne.totalRuns} balls={entry.playerOne.totalDeliveries} />
+
+                  <BatsmanDisplay name={entry.playerTwo.playerName} runs={entry.playerTwo.totalRuns} balls={entry.playerTwo.totalDeliveries} />
 
                 </div>
 
                 <div style={{ fontSize: "1.5em" }}>
-                  <p>{addRuns(entry.overRuns)}</p>
+                  <p>{overData.totalRuns}</p>
                   <hr />
-                  <p>{wicketsCounter(entry.overRuns)}</p>
+                  <p>{overData.totalWickets}</p>
                 </div>
 
               </summary>
 
               <hr style={{ width: "90%", margin: "auto" }} />
 
-              <div style={{ display: "flex", justifyContent: "space-evenly", margin: "0.5em 0em", }}>
-                {
-                  entry.overRuns.map((run, id) => {
-                    return (
-                      <span key={id} style={{ width: "30px", height: "30px", fontSize: "1.7em", backgroundColor: "#ccc", color: "black", borderRadius: "50%", }} >
-                        {typeof run === "string" ? "W" : run}
-                      </span>
-                    )
-                  })
-                }
-              </div>
+              <BallDisplayContainer eachOver={entry?.overRuns} />
 
             </details>
           )
@@ -95,4 +91,29 @@ function EachInnings({ allOvers }) {
       }
     </div>
   )
-}
+};
+
+const BatsmanDisplay = ({ name, runs, balls }) => (
+  <p style={{ display: "flex", justifyContent: "space-between", margin: "0.25em 0em", padding: "0em 0.3em", }}>
+    <span>{name}</span>
+    <span>{runs} ({balls})</span>
+  </p>
+);
+
+const BowlerDisplay = ({ name }) => (
+  <p style={{ textAlign: "left", background: "#ccc", color: "black", borderRadius: "0.5em 0.7em", margin: "0.5em 0em", padding: "0em 0.3em", }}>{name}</p>
+);
+
+const BallDisplayContainer = ({ eachOver }) => (
+  <div style={{ display: "flex", justifyContent: "space-evenly", margin: "0.5em 0em", }}>
+    {
+      eachOver?.map((run, id) => <BallDisplay key={id} run={run} />)
+    }
+  </div>
+);
+
+const BallDisplay = ({ run }) => (
+  <span style={{ width: "30px", height: "30px", fontSize: "1.7em", backgroundColor: "#ccc", color: "black", borderRadius: "50%", }} >
+    {typeof run === "string" ? "W" : run}
+  </span>
+);

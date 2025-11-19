@@ -137,7 +137,7 @@ const BattingRow = ({ player }) => {
   return (
     <div style={{ fontSize: "0.9em", borderbottom: "1px solit whitesmoke", }}>
       <details
-        defaultOpen={player.totalRuns > 50}
+        open={player.totalRuns > 50}
         style={{
           fontSize: "0.9em",
           borderBottom: "1px solid whitesmoke",
