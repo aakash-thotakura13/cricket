@@ -5,20 +5,24 @@ import { inningsOneAllOvers, inningsTwoAllOvers } from "../jotai/atom";
 
 // functions
 import { combineData } from "../function/combineData";
+import { useMemo } from "react";
 
 export const Comparison = () => {
 
-  const [_inningsOneAllovers, setInningsOneAllOvers] = useAtom(inningsOneAllOvers);
-  const [_inningsTwoAllovers, setInningsTwoAllOvers] = useAtom(inningsTwoAllOvers);
+  const [_inningsOneAllovers] = useAtom(inningsOneAllOvers);
+  const [_inningsTwoAllovers] = useAtom(inningsTwoAllOvers);
 
-  const displayData = combineData(_inningsOneAllovers, _inningsTwoAllovers) || [];
+  const displayData = useMemo(() => {
+    return combineData(_inningsOneAllovers, _inningsTwoAllovers) || []
+  },[_inningsOneAllovers, _inningsTwoAllovers]
+  );
 
   return (
     <div>
       {
         displayData.map((entry, id) => {
           return (
-            <div key={id} style={{ display: "grid", gridTemplateColumns: "1fr 0.5fr 1fr", gap: "0.5em", alignItems: "center", borderBottom: "1px solid #ccc", }}>
+            <div key={id} style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: "0.5em", alignItems: "center", borderBottom: "1px solid #ccc", }}>
 
               <Section totalRuns={entry.oneTotalRuns} totalWickets={entry.oneTotalWickets} run={entry.oneRun} wicket={entry.oneWickets} strikeRate={entry.oneRunRate} />
 
@@ -42,7 +46,7 @@ function Section({ totalRuns, totalWickets, run, wicket, strikeRate }) {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", }}>
         <p style={{ fontSize: "0.9em", margin: "0em", borderRight: "1px solid #ccc", }}>{run}-{wicket}</p>
-        <p style={{ fontSize: "0.9em", margin: "0em", borderLeft: "1px solid #ccc", }}>{(strikeRate).toFixed(2)}</p>
+        <p style={{ fontSize: "0.9em", margin: "0em", borderLeft: "1px solid #ccc", }}>{(strikeRate).toFixed(2)?? "0.00"}</p>
       </div>
 
     </div>
