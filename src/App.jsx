@@ -13,9 +13,11 @@ function App() {
 
       <HeaderComponent />
 
-      <Suspense fallback={<div>Loading...</div>}>
-        <Outlet />
-      </Suspense>
+      <section style={{ padding: "0em 0.5em", }}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Outlet />
+        </Suspense>
+      </section>
 
     </>
   )
