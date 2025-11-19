@@ -1,11 +1,13 @@
 import { useAtomValue } from "jotai";
 
+// states
 import {
   inningsOneAllOvers, inningsOneBattingScoreCard, inningsOneBowlingScoreCard,
   inningsTwoAllOvers, inningsTwoBattingScoreCard, inningsTwoBowlingScoreCard,
   overRuns, teamOne, teamTwo
 } from "../jotai/atom";
 
+// functions
 import addRuns from "../function/addRuns";
 import wicketsCounter from "../function/wicketsCounter";
 
@@ -31,8 +33,21 @@ export const Overview = () => {
 
     <div style={styles.container}>
 
-      <InningsOverView battingCard={_inningsOneBattingScoreCard} bowlingCard={_inningsOneBowlingScoreCard} battingTeamName={_teamOne.tag} bowlingTeamName={_teamTwo.tag} oversArray={[..._inningsOneAllOvers, _overRuns].flat()} />
-      <InningsOverView battingCard={_inningsTwoBattingScoreCard} bowlingCard={_inningsTwoBowlingScoreCard} battingTeamName={_teamTwo.tag} bowlingTeamName={_teamOne.tag} oversArray={[..._inningsTwoAllOvers, _overRuns].flat()} />
+      <InningsOverView
+        battingCard={_inningsOneBattingScoreCard}
+        bowlingCard={_inningsOneBowlingScoreCard}
+        battingTeamName={_teamOne.tag}
+        bowlingTeamName={_teamTwo.tag}
+        oversArray={[..._inningsOneAllOvers, _overRuns].flat()}
+      />
+
+      <InningsOverView
+        battingCard={_inningsTwoBattingScoreCard}
+        bowlingCard={_inningsTwoBowlingScoreCard}
+        battingTeamName={_teamTwo.tag}
+        bowlingTeamName={_teamOne.tag}
+        oversArray={[..._inningsTwoAllOvers, _overRuns].flat()}
+      />
 
     </div>
   )
@@ -40,15 +55,27 @@ export const Overview = () => {
 
 function InningsOverView({ battingCard, bowlingCard, battingTeamName, bowlingTeamName, oversArray }) {
 
-  const filterBatsman = battingCard?.length > 0 && [...battingCard]?.sort((a, b) => b.totalRuns - a.totalRuns)?.slice(0, 3) || [];
-  const filterBowler = bowlingCard?.length > 0 && [...bowlingCard]?.sort((a, b) => b.wickets - a.wickets)?.sort((a, b) => a.totalRuns - b.totalRuns)?.slice(0, 3) || [];
+  const filterBatsman = battingCard?.length > 0
+    && [...battingCard]
+      ?.sort((a, b) => b.totalRuns - a.totalRuns)
+      ?.slice(0, 3)
+    || [];
 
-  const runsFlatArray = oversArray.map(over => over.overRuns).flat();
+  const filterBowler = bowlingCard?.length > 0
+    && [...bowlingCard]
+      ?.sort((a, b) => {
+        if (b.wickets !== a.wickets) return b.wickets - a.wickets;
+        return a.totalRuns - b.totalRuns;
+      })?.slice(0, 3)
+    || [];
+
+  const runsFlatArray = oversArray.map(over => over.overRuns) || [];
   const score = addRuns(runsFlatArray);
   const wickets = wicketsCounter(runsFlatArray);
 
   return (
     <div>
+
       <p style={styles.sectionTitle}>
         <span>{battingTeamName}</span>
         <span>{score} / {wickets}</span>
@@ -56,7 +83,8 @@ function InningsOverView({ battingCard, bowlingCard, battingTeamName, bowlingTea
 
       {
         filterBatsman.map((batsman, id) => <p key={id} style={styles.subContainer}>
-          <span>{batsman.playerName}</span> <span>{batsman.totalRuns} ({batsman.totalDeliveries})</span>
+          <span>{batsman.playerName}</span>
+          <span>{batsman.totalRuns} ({batsman.totalDeliveries})</span>
         </p>)
       }
 
@@ -66,7 +94,8 @@ function InningsOverView({ battingCard, bowlingCard, battingTeamName, bowlingTea
 
       {
         filterBowler.map((bowler, id) => <p key={id} style={styles.subContainer}>
-          <span>{bowler.playerName}</span> <span>{bowler.wickets} / {bowler.totalRuns}</span>
+          <span>{bowler.playerName}</span>
+          <span>{bowler.wickets} / {bowler.totalRuns}</span>
         </p>)
       }
 
