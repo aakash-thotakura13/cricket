@@ -52,9 +52,9 @@ function EachInnings({ allOvers }) {
   return (
     <div>
       {
-        allOvers.map((entry, id) => {
+        allOvers?.map((entry, id) => {
 
-          const overData = useMemo(() => computeOverData(entry.overRuns), [entry.overRuns]);
+          const overData = computeOverData(entry?.overRuns);
 
           return (
             <details key={id} style={{ padding: "0em", margin: "0.5em 0em", border: overData?.hasWicket ? "0.1em solid red" : "1px solid #ccc", borderRadius: "2.5em", }} open={overData?.hasWicket}>
@@ -65,18 +65,18 @@ function EachInnings({ allOvers }) {
 
                 <div>
 
-                  <BowlerDisplay name={entry.bowler.playerName} />
+                  <BowlerDisplay name={entry?.bowler.playerName} />
 
-                  <BatsmanDisplay name={entry.playerOne.playerName} runs={entry.playerOne.totalRuns} balls={entry.playerOne.totalDeliveries} />
+                  <BatsmanDisplay name={entry?.playerOne.playerName} runs={entry?.playerOne.totalRuns} balls={entry?.playerOne.totalDeliveries} />
 
-                  <BatsmanDisplay name={entry.playerTwo.playerName} runs={entry.playerTwo.totalRuns} balls={entry.playerTwo.totalDeliveries} />
+                  <BatsmanDisplay name={entry?.playerTwo.playerName} runs={entry?.playerTwo.totalRuns} balls={entry?.playerTwo.totalDeliveries} />
 
                 </div>
 
                 <div style={{ fontSize: "1.5em" }}>
-                  <p>{overData.totalRuns}</p>
+                  <p>{overData?.totalRuns}</p>
                   <hr />
-                  <p>{overData.totalWickets}</p>
+                  <p>{overData?.totalWickets}</p>
                 </div>
 
               </summary>
