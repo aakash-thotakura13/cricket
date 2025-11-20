@@ -1,5 +1,6 @@
 export default function addRuns(runs = []) {
   return runs
-    .filter((run) => typeof run === "number")
-    .reduce((total, run) => total + run, 0);
-}
+    .reduce((total, run) => {
+      return typeof run === "number" ? total + run : total;
+    }, 0);
+};
