@@ -16,6 +16,11 @@ import generateRuns from "../function/generateRuns";
 import wicketsCounter from "../function/wicketsCounter";
 import { updateBowler, updateOver } from "../function/updateBowler";
 import updateBatsman from "../function/updateBatsman";
+import rotateStrike from "../function/rotateStrike";
+import updateActivePartnership from "../function/updatePartnership";
+import updatePartnershipData from "../function/updatePartnershipData";
+import DisplayBattingTeam from "./DisplayBattingTeam";
+import DisplayBowlingTeam from "./DisplayBowlingTeam";
 
 
 export const Pitch = ({
@@ -52,35 +57,34 @@ export const Pitch = ({
       overRuns: _overRuns,
     };
 
-    setAllOvers([...allOvers, eachOver]);
 
+    setAllOvers(prev => [...prev, eachOver]);
     setOverRuns([]);
     setBowler({});
-    setPrevBowler(prev => _bowler);
-    setOnStrike(!_onStrike);
+    setOnStrike(prev => !prev);
+    setPrevBowler(() => _bowler);
 
-  }, [_playerOne, _playerTwo, _bowler, _overRuns]);
+  }, [_playerOne, _playerTwo, _bowler, _overRuns, setAllOvers, setOverRuns, setBowler, setPrevBowler, setOnStrike]);
 
-  function inningUp() {
 
+  const inningUp = () => {
     const partnershipUpdate = {
       partnerOne: _partnerOne,
       partnerTwo: _partnerTwo,
     };
 
-    setPartnershipData([...partnershipData, partnershipUpdate]);
-    console.table("partnership updated", partnershipUpdate)
+    setPartnershipData(prev => [...prev, partnershipUpdate]);
 
     setStatus(true);
-    setPlayerOne({}); setPlayerTwo({});
-    setPartnerOne({}); setPartnerTwo({});
-    setBowler({}); setPrevBowler({});
+    setPlayerOne({});
+    setPlayerTwo({});
+    setPartnerOne({});
+    setPartnerTwo({});
+    setBowler({});
+    setPrevBowler({});
     setOnStrike(true);
-
-    console.log("Innings Over");
     setActivePartnership([]);
-
-  }
+  };
 
 
   useEffect(() => {
@@ -89,7 +93,7 @@ export const Pitch = ({
       setBowlingCard(updatedArray);
       overUp();
     }
-  }, [_overRuns]);
+  }, [_overRuns, _bowler, bowlingCard, setBowlingCard, overUp]);
 
 
   useEffect(() => {
@@ -130,17 +134,9 @@ export const Pitch = ({
         setPlayerOne({});
 
         // update partner state
-        const newPartnershipEntry = {
-          partnerOne: { ..._partnerOne, runs: [..._partnerOne.runs, run], },
-          partnerTwo: _partnerTwo,
-        };
+        const { newPartnershipEntry, updatePartnership } = updatePartnershipData(_onStrike, run, _partnerOne, _partnerTwo);
         setPartnershipData([...partnershipData, newPartnershipEntry]);
-
-        const updateActivePartnership = {
-          partnerOne: {},
-          partnerTwo: { playerName: _partnerTwo.playerName, runs: [], },
-        };
-        setActivePartnership(updateActivePartnership);
+        setActivePartnership(updatePartnership)
 
         setPartnerOne({});
         setPartnerTwo({ playerName: _partnerTwo.playerName, runs: [] });
@@ -156,17 +152,9 @@ export const Pitch = ({
         setPlayerTwo({});
 
         // update partner state
-        const newPartnershipEntry = {
-          partnerOne: _partnerOne,
-          partnerTwo: { ..._partnerTwo, runs: [..._partnerTwo.runs, run], },
-        };
+        const { newPartnershipEntry, updatePartnership } = updatePartnershipData(_onStrike, run, _partnerTwo, _partnerOne);
         setPartnershipData([...partnershipData, newPartnershipEntry]);
-
-        const updateActivePartnership = {
-          partnerOne: { playerName: _partnerOne.playerName, runs: [], },
-          partnerTwo: {},
-        };
-        setActivePartnership(updateActivePartnership);
+        setActivePartnership(updatePartnership)
 
         setPartnerTwo({});
         setPartnerOne({ playerName: _partnerOne.playerName, runs: [] });
@@ -174,9 +162,7 @@ export const Pitch = ({
       }
     } else {
 
-      if (run % 2 !== 0) {
-        setOnStrike(!_onStrike)
-      };
+      rotateStrike(run, setOnStrike);
 
       if (_onStrike) {
 
@@ -186,40 +172,28 @@ export const Pitch = ({
         setBattingCard(updatedArray);
 
         // update partner state
-        const singlePartnerUpdate = {
-          playerName: _partnerOne.playerName,
-          runs: [..._partnerOne.runs, run],
-        };
+        const { singlePartnerUpdate, updatePartnership } = updateActivePartnership(_onStrike, run, _partnerOne, _partnerTwo);
         setPartnerOne(singlePartnerUpdate);
-
-        const updatePartnership = {
-          partnerOne: singlePartnerUpdate,
-          partnerTwo: _partnerTwo,
-        };
         setActivePartnership(updatePartnership);
 
       } else {
 
+        // update player state
         const { playerEntry, updatedArray } = updateBatsman(run, _playerTwo, battingCard, null, bowlingTeam,);
-
         setPlayerTwo(playerEntry);
         setBattingCard(updatedArray);
 
-        const singlePartnerUpdate = {
-          playerName: _partnerTwo.playerName,
-          runs: [..._partnerTwo.runs, run],
-        }
+        // update partner state
+        const { singlePartnerUpdate, updatePartnership } = updateActivePartnership(_onStrike, run, _partnerTwo, _partnerOne);
         setPartnerTwo(singlePartnerUpdate);
-
-        const updatePartnership = {
-          partnerOne: _partnerOne,
-          partnerTwo: singlePartnerUpdate,
-        };
         setActivePartnership(updatePartnership);
 
       }
     }
   };
+
+  const striker = _onStrike ? _playerOne : _playerTwo;
+  const nonStriker = !_onStrike ? _playerOne : _playerTwo;
 
 
   return (
@@ -236,7 +210,7 @@ export const Pitch = ({
             {
               Object.keys(_playerOne).length > 0 && Object.keys(_playerTwo).length > 0
                 ? <div
-                  onClick={() => game()}
+                  onClick={game}
                   style={{
                     width: "350px",
                     padding: "0.5em 0.25em",
@@ -249,19 +223,8 @@ export const Pitch = ({
                     justifyContent: "space-between",
                   }}>
 
-                  <p style={{ padding: "0em", }}>
-                    {
-                      _onStrike
-                        ? <>
-                          <span>{_playerOne.playerName}</span> <br />
-                          <span>{addRuns(_playerOne?.runs)} ({_playerOne?.runs?.length})</span>
-                        </>
-                        : <>
-                          <span>{_playerTwo.playerName}</span> <br />
-                          <span>{addRuns(_playerTwo?.runs)} ({_playerTwo?.runs?.length})</span>
-                        </>
-                    }
-                  </p>
+                  {/* striker display */}
+                  <BatsmanDisplay player={striker} />
 
                   <div>
                     <p style={{ fontSize: "2.7em", margin: "0em", padding: "0em", }}>
@@ -270,7 +233,7 @@ export const Pitch = ({
                         {
                           _overRuns.length > 0
                             ? addRuns(_overRuns)
-                            : allOvers.length > 0 && addRuns(allOvers.at(-1).overRuns)
+                            : addRuns(allOvers?.at(-1)?.overRuns || [])
                         }
                       </span>
                     </p>
@@ -282,89 +245,35 @@ export const Pitch = ({
                     }
                   </div>
 
-                  <p style={{ padding: "0em", }}>
-                    {
-                      _onStrike
-                        ? <>
-                          <span>{_playerTwo.playerName}</span> <br />
-                          <span>{addRuns(_playerTwo?.runs)} ({_playerTwo?.runs?.length})</span>
-                        </>
-                        : <>
-                          <span>{_playerOne.playerName}</span> <br />
-                          <span>{addRuns(_playerOne?.runs)} ({_playerOne?.runs?.length})</span>
-                        </>
-                    }
-                  </p>
+                  {/* nonStriker display */}
+                  <BatsmanDisplay player={nonStriker} />
 
                 </div>
-                : <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.25em", fontSize: "0.85em" }}>
-                  {
-                    battingTeam.teamMembers.map((player, id) => {
-                      return (
-                        <li
-                          key={id}
-                          style={{
-                            backgroundColor: battingCard.some(playerEntry => playerEntry.playerName === player) ? "#ccc" : "",
-                            color: battingCard.some(playerEntry => playerEntry.playerName === player) ? "black" : "",
-                            fontWeight: "400",
-                            border: "2px solid #ccc",
-                            borderRadius: "1em",
-                            cursor: "pointer",
-                            padding: "0.35em 0.7em",
-                            textAlign: "left",
-                          }}
-                          onClick={() => addBatsman(player, _playerOne, setPlayerOne, _playerTwo, setPlayerTwo, setPartnerOne, setPartnerTwo, battingCard, setBattingCard, outPlayer.current)}
-                        >
-                          {player}
-                        </li>
-                      )
-                    })
-                  }
-                </div>
+                : <DisplayBattingTeam
+                  battingTeam={battingTeam} battingCard={battingCard}
+                  playerOne={_playerOne} setPlayerOne={setPlayerOne}
+                  playerTwo={_playerTwo} setPlayerTwo={setPlayerTwo}
+                  setPartnerOne={setPartnerOne} setPartnerTwo={setPartnerTwo}
+                  setBattingCard={setBattingCard} outPlayer={outPlayer.current}
+                />
             }
           </div>
 
-          <br />
-          <hr />
-          <br />
+          <hr style={{ margin: "1.5em" }} />
 
           <div>
             {
               Object.keys(_bowler).length > 0
                 ?
                 <>
-                  <p style={{ display: "flex", justifyContent: "space-between", margin: "0.25em 0em", }}>
-                    <span>{_bowler.playerName}</span>
-                    <span>{addRuns(_bowler?.runs)}/{wicketsCounter(_bowler?.runs)} ({Math.trunc(_bowler?.runs?.length / 6)}.{_bowler?.runs?.length % 6}) </span>
-                  </p>
-                  <p style={{ display: "flex", justifyContent: "space-between", margin: "0.25em 0em", }}>
-                    <span>{_prevBowler.playerName}</span>
-                    <span>{addRuns(_prevBowler?.runs)}/{wicketsCounter(_prevBowler?.runs)} ({Math.trunc(_prevBowler?.runs?.length / 6)}.{_prevBowler?.runs?.length % 6}) </span>
-                  </p>
+                  <BowlerDisplay player={_bowler} />
+                  <BowlerDisplay player={_prevBowler} />
                 </>
-                :
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.25em", fontSize: "0.85em" }}>
-                  {
-                    bowlingTeam.teamMembers.map((player, id) => {
-                      return (
-                        <li
-                          key={id}
-                          style={{
-                            backgroundColor: player === _bowler.playerName || player === _prevBowler.playerName ? "grey" : "",
-                            border: "2px solid #ccc",
-                            borderRadius: "1em",
-                            cursor: "pointer",
-                            padding: "0.35em 0.7em",
-                            textAlign: "left",
-                          }}
-                          onClick={() => addBowler(player, setBowler, bowlingCard, setBowlingCard,)}
-                        >
-                          {player}
-                        </li>
-                      )
-                    })
-                  }
-                </div>
+                : <DisplayBowlingTeam
+                  bowlingTeam={bowlingTeam} bowler={_bowler} setBowler={setBowler}
+                  bowlingCard={bowlingCard} setBowlingCard={setBowlingCard}
+                  prevBowler={_prevBowler}
+                />
             }
           </div>
 
@@ -380,3 +289,21 @@ export const Pitch = ({
     </div>
   )
 };
+
+function BatsmanDisplay({ player }) {
+  return (
+    <p style={{ padding: "0em", }}>
+      <span>{player?.playerName}</span> <br />
+      <span>{addRuns(player?.runs)} ({player?.runs?.length})</span>
+    </p>
+  )
+};
+
+function BowlerDisplay({ player }) {
+  return (
+    <p style={{ display: "flex", justifyContent: "space-between", margin: "0.25em 0em", }}>
+      <span>{player.playerName}</span>
+      <span>{addRuns(player?.runs)}/{wicketsCounter(player?.runs)} ({Math.trunc(player?.runs?.length / 6)}.{player?.runs?.length % 6}) </span>
+    </p>
+  )
+}
