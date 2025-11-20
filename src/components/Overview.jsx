@@ -2,6 +2,7 @@ import { useAtomValue } from "jotai";
 
 // states
 import {
+  inningsOne,
   inningsOneAllOvers, inningsOneBattingScoreCard, inningsOneBowlingScoreCard,
   inningsTwoAllOvers, inningsTwoBattingScoreCard, inningsTwoBowlingScoreCard,
   overRuns, teamOne, teamTwo
@@ -28,6 +29,11 @@ export const Overview = () => {
 
   const _overRuns = useAtomValue(overRuns);
 
+  const inningsOneStatus = useAtomValue(inningsOne);
+
+  const _inningsOneTotalOvers = inningsOneStatus ? [..._inningsOneAllOvers.flatMap(data => data.overRuns)] : [..._inningsOneAllOvers.flatMap(data => data.overRuns), ..._overRuns];
+  const _inningsTwoTotalOvers = [..._inningsTwoAllOvers.flatMap(data => data.overRuns), ..._overRuns];
+
 
   return (
 
@@ -38,7 +44,7 @@ export const Overview = () => {
         bowlingCard={_inningsOneBowlingScoreCard}
         battingTeamName={_teamOne.tag}
         bowlingTeamName={_teamTwo.tag}
-        oversArray={[..._inningsOneAllOvers, _overRuns].flat()}
+        oversArray={_inningsOneTotalOvers}
       />
 
       <InningsOverView
@@ -46,7 +52,7 @@ export const Overview = () => {
         bowlingCard={_inningsTwoBowlingScoreCard}
         battingTeamName={_teamTwo.tag}
         bowlingTeamName={_teamOne.tag}
-        oversArray={[..._inningsTwoAllOvers, _overRuns].flat()}
+        oversArray={_inningsTwoTotalOvers}
       />
 
     </div>
@@ -69,9 +75,9 @@ function InningsOverView({ battingCard, bowlingCard, battingTeamName, bowlingTea
       })?.slice(0, 3)
     || [];
 
-  const runsFlatArray = oversArray.map(over => over.overRuns) || [];
-  const score = addRuns(runsFlatArray);
-  const wickets = wicketsCounter(runsFlatArray);
+  const score = addRuns(oversArray);
+  const wickets = wicketsCounter(oversArray);
+
 
   return (
     <div>
