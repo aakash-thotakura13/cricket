@@ -2,7 +2,6 @@ import addRuns from "./addRuns";
 import wicketsCounter from "./wicketsCounter";
 
 export function combineData(inningsOne, inningsTwo) {
-
   const one = inningsOne.map((over) => addRuns(over.overRuns || []));
   const two = inningsTwo.map((over) => addRuns(over.overRuns || []));
 
@@ -17,20 +16,21 @@ export function combineData(inningsOne, inningsTwo) {
     const overIndex = i + 1;
 
     const oneTotalRuns = addRuns(one.slice(0, overIndex));
+    const twoTotalRuns = addRuns(two.slice(0, overIndex));
+
     const oneTotalWickets = wicketsCounter(ballsOne.slice(0, 6 * overIndex));
+    const twoTotalWickets = wicketsCounter(ballsTwo.slice(0, 6 * overIndex));
+
     const oneRunRate = oneTotalRuns / overIndex;
+    const twoRunRate = twoTotalRuns / overIndex;
     
     const oneWickets = inningsOne[i]
-      ? wicketsCounter(inningsOne[i].overRuns)
-      : 0;
-
-    const twoTotalRuns = addRuns(two.slice(0, overIndex));
-    const twoTotalWickets = wicketsCounter(ballsTwo.slice(0, 6 * overIndex));
-    const twoRunRate = twoTotalRuns / overIndex;
-   
+    ? wicketsCounter(inningsOne[i].overRuns)
+    : 0;
     const twoWickets = inningsTwo[i]
       ? wicketsCounter(inningsTwo[i].overRuns)
       : 0;
+      
 
     result.push({
       over: overIndex,
