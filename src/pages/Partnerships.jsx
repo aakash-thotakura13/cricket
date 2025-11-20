@@ -45,7 +45,7 @@ function AllPartnerships({ partnerships }) {
 
   return (
     <div style={{ margin: "1em 0em", }}>
-      {partnerships.map((singlePartnership, id) => (
+      {partnerships?.map((singlePartnership, id) => (
         <ActivePartnership key={id} singlePartnership={singlePartnership} />
       ))}
     </div>
