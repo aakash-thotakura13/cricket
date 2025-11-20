@@ -24,6 +24,16 @@ body {
   padding: 0em;
 }
 
+button {
+  font-family: "Google Sans Flex", sans-serif;
+  font-size: 0.95em;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5em 1em;
+  border-radius: 50px;
+}
+
 ul,
 li,
 summary {
