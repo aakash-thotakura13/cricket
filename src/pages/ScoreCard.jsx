@@ -153,7 +153,7 @@ const BattingRow = ({ player }) => {
           }}>
           <span style={{ textAlign: "left", }}>
             {player.playerName} &nbsp;
-            {player.status === "not out" && <strong>*</strong>}
+            {player.status === "NOT OUT" && <strong>*</strong>}
           </span>
           <span>{player.totalRuns} ({player.runs.length})</span>
           <span>{player.fours}</span>
@@ -164,9 +164,9 @@ const BattingRow = ({ player }) => {
         <div className="details-content" style={{ padding: "0.75em 0.5em" }}>
           {/* OUT info */}
           {
-            player.status !== "not out" && (
+            player.status === "OUT" && (
               <p style={{ color: "#ccc", fontSize: "0.9em" }}>
-                {player.status}
+                {player.outBy}
               </p>
             )
           }

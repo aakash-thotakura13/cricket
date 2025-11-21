@@ -49,7 +49,8 @@ export default function updateBatsman(
     totalRuns,
     totalDeliveries,
     strikeRate,
-    status: batsmanStatus,
+    status: isWicket ? "OUT" : "NOT OUT",
+    outBy: batsmanStatus,
     fours,
     sixes,
   };

@@ -21,7 +21,7 @@ export function addBatsman(
   const playerEntry = {
     playerName: player,
     runs: [],
-    status: "not out",
+    status: "NOT OUT",
     totalRuns: 0,
     totalDeliveries: 0,
     strikeRate: 0.0,
