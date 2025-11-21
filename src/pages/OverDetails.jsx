@@ -105,7 +105,7 @@ const BowlerDisplay = ({ name }) => (
 );
 
 const BallDisplayContainer = ({ eachOver }) => (
-  <div style={{ display: "flex", justifyContent: "space-evenly", margin: "0.5em 0em", }}>
+  <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", placeItems: "center", margin: "0.5em 2em 0.5em 5em", }}>
     {
       eachOver?.map((run, id) => <BallDisplay key={id} run={run} />)
     }
@@ -113,7 +113,7 @@ const BallDisplayContainer = ({ eachOver }) => (
 );
 
 const BallDisplay = ({ run }) => (
-  <span style={{ width: "30px", height: "30px", fontSize: "1.7em", backgroundColor: "#ccc", color: "black", borderRadius: "50%", }} >
+  <span style={{ width: "30px", aspectRatio: "1", fontSize: "1.5em", placeContent: "center", backgroundColor: "#ccc", color: "black", borderRadius: "50%", }} >
     {typeof run === "string" ? "W" : run}
   </span>
 );
