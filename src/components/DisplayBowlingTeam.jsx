@@ -16,7 +16,7 @@ const DisplayBowlingTeam = ({ bowlingTeam, bowler, setBowler, bowlingCard, setBo
                 padding: "0.35em 0.7em",
                 textAlign: "left",
               }}
-              onClick={() => addBowler(player, setBowler, bowlingCard, setBowlingCard,)}
+              onClick={() => addBowler(player, prevBowler, setBowler, bowlingCard, setBowlingCard,)}
             >
               {player}
             </button>
