@@ -2,10 +2,9 @@ import { useAtomValue } from "jotai";
 
 // states
 import {
-  inningsOne,
   inningsOneAllOvers, inningsOneBattingScoreCard, inningsOneBowlingScoreCard,
   inningsTwoAllOvers, inningsTwoBattingScoreCard, inningsTwoBowlingScoreCard,
-  overRuns, teamOne, teamTwo
+  teamOne, teamTwo
 } from "../jotai/atom";
 
 // functions
@@ -27,12 +26,8 @@ export const Overview = () => {
   const _inningsOneAllOvers = useAtomValue(inningsOneAllOvers);
   const _inningsTwoAllOvers = useAtomValue(inningsTwoAllOvers);
 
-  const _overRuns = useAtomValue(overRuns);
-
-  const inningsOneStatus = useAtomValue(inningsOne);
-
-  const _inningsOneTotalOvers = inningsOneStatus ? [..._inningsOneAllOvers.flatMap(data => data.overRuns)] : [..._inningsOneAllOvers.flatMap(data => data.overRuns), ..._overRuns];
-  const _inningsTwoTotalOvers = [..._inningsTwoAllOvers.flatMap(data => data.overRuns), ..._overRuns];
+  const _inningsOneTotalOvers = [..._inningsOneAllOvers.flatMap(data => data.overRuns)];
+  const _inningsTwoTotalOvers = [..._inningsTwoAllOvers.flatMap(data => data.overRuns)];
 
 
   return (
