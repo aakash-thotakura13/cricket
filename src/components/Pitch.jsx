@@ -1,5 +1,5 @@
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAtom } from "jotai";
 
 // states
@@ -8,10 +8,11 @@ import { activePartnership, bowler, onStrike, overRuns, partnerOne, partnerTwo, 
 // components
 import { Overview } from "./Overview";
 import { ScoreBar } from "./ScoreBar";
+import DisplayBattingTeam from "./DisplayBattingTeam";
+import DisplayBowlingTeam from "./DisplayBowlingTeam";
 
 // functions
 import addRuns from "../function/addRuns"
-import { addBatsman, addBowler } from "../function/addPlayers";
 import generateRuns from "../function/generateRuns";
 import wicketsCounter from "../function/wicketsCounter";
 import { updateBowler, updateOver } from "../function/updateBowler";
@@ -19,8 +20,6 @@ import updateBatsman from "../function/updateBatsman";
 import rotateStrike from "../function/rotateStrike";
 import updateActivePartnership from "../function/updatePartnership";
 import updatePartnershipData from "../function/updatePartnershipData";
-import DisplayBattingTeam from "./DisplayBattingTeam";
-import DisplayBowlingTeam from "./DisplayBowlingTeam";
 
 
 export const Pitch = ({
@@ -45,20 +44,15 @@ export const Pitch = ({
   const [_overRuns, setOverRuns] = useAtom(overRuns);
   const [_onStrike, setOnStrike] = useAtom(onStrike);
   const [_activePartnership, setActivePartnership] = useAtom(activePartnership);
+
   const outPlayer = useRef(null);
+
+  const striker = _onStrike ? _playerOne : _playerTwo;
+  const nonStriker = !_onStrike ? _playerOne : _playerTwo;
 
 
   const overUp = useCallback(() => {
 
-    const eachOver = {
-      playerOne: _playerOne,
-      playerTwo: _playerTwo,
-      bowler: _bowler,
-      overRuns: _overRuns,
-    };
-
-
-    setAllOvers(prev => [...prev, eachOver]);
     setOverRuns([]);
     setBowler({});
     setOnStrike(prev => !prev);
@@ -68,6 +62,7 @@ export const Pitch = ({
 
 
   const inningUp = () => {
+
     const partnershipUpdate = {
       partnerOne: _partnerOne,
       partnerTwo: _partnerTwo,
@@ -88,11 +83,13 @@ export const Pitch = ({
 
 
   useEffect(() => {
+
     if (_overRuns.length === 6) {
       const updatedArray = updateOver(_bowler, bowlingCard, _overRuns);
       setBowlingCard(updatedArray);
       overUp();
     }
+
   }, [_overRuns, _bowler, bowlingCard, setBowlingCard, overUp]);
 
 
@@ -101,6 +98,37 @@ export const Pitch = ({
       inningUp();
     }
   }, [allOvers]);
+
+
+  function updateAllOversPerBall(run) {
+
+    // adding a new over, if the last over the allOvers array has 6 entries
+    if (allOvers.length === 0 || allOvers.at(-1).overRuns.length === 6) {
+      const newOver = {
+        playerOne: _playerOne,
+        playerTwo: _playerTwo,
+        bowler: _bowler,
+        overRuns: [run],
+      };
+
+      setAllOvers(prev => [...prev, newOver]);
+      return;
+    }
+
+    const updatedOver = {
+      ...allOvers.at(-1),
+      playerOne: _playerOne,
+      playerTwo: _playerTwo,
+      bowler: _bowler,
+      overRuns: [...allOvers.at(-1).overRuns, run],
+    };
+
+    setAllOvers(prev => {
+      const copy = [...prev];
+      copy[copy.length - 1] = updatedOver;
+      return copy;
+    });
+  };
 
 
   function game() {
@@ -115,6 +143,7 @@ export const Pitch = ({
 
     const overRuns = [..._overRuns, run,];
     setOverRuns(overRuns);
+    updateAllOversPerBall(run);
 
     const { bowlerEntry, updatedArray } = updateBowler(run, _bowler, bowlingCard,)
     setBowler(bowlerEntry);
@@ -191,9 +220,6 @@ export const Pitch = ({
       }
     }
   };
-
-  const striker = _onStrike ? _playerOne : _playerTwo;
-  const nonStriker = !_onStrike ? _playerOne : _playerTwo;
 
 
   return (
