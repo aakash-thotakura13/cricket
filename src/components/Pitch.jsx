@@ -58,7 +58,7 @@ export const Pitch = ({
     setOnStrike(prev => !prev);
     setPrevBowler(() => _bowler);
 
-  }, [_playerOne, _playerTwo, _bowler, _overRuns, setAllOvers, setOverRuns, setBowler, setPrevBowler, setOnStrike]);
+  }, [_bowler, setOverRuns, setBowler, setPrevBowler, setOnStrike]);
 
 
   const inningUp = () => {
@@ -79,6 +79,7 @@ export const Pitch = ({
     setPrevBowler({});
     setOnStrike(true);
     setActivePartnership([]);
+    setOverRuns([]);
   };
 
 
@@ -94,17 +95,21 @@ export const Pitch = ({
 
 
   useEffect(() => {
-    if (allOvers.length === 20) {
+
+    const completedOvers = Math.floor(allOvers.flatMap(over => over.overRuns).length / 6)
+
+    if (completedOvers === 20) {
       alert("Match Over", allOvers.length);
       inningUp();
-    }
+    };
+
   }, [allOvers]);
 
 
   useEffect(() => {
     const totalWickets = computeWicket(battingCard);
-    
-    if (totalWickets === 2) {
+
+    if (totalWickets === 10) {
       alert("Match Over", totalWickets);
       inningUp();
     }
