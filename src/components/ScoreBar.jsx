@@ -3,6 +3,7 @@ import addRuns from "../function/addRuns";
 import wicketsCounter from "../function/wicketsCounter";
 
 export const ScoreBar = ({ team, allOvers, activeOver }) => {
+
   const overs = allOvers?.flatMap(over => over.overRuns) || [];
   const currentBalls = activeOver?.length || 0;
 
@@ -10,6 +11,7 @@ export const ScoreBar = ({ team, allOvers, activeOver }) => {
   const wickets = wicketsCounter([...overs, ...activeOver]);
 
   const completedOvers = allOvers?.length || 0;
+  const displayOver = Math.floor(overs.length / 6) || 0
 
   // Correct run rate
   const totalBalls = completedOvers * 6 + currentBalls;
@@ -46,8 +48,9 @@ export const ScoreBar = ({ team, allOvers, activeOver }) => {
     }, frameRate);
 
     return () => clearInterval(interval);
-    
+
   }, [totalRuns]);
+
 
   return (
     <div style={styles.wrapper}>
@@ -59,7 +62,7 @@ export const ScoreBar = ({ team, allOvers, activeOver }) => {
         <span style={styles.rr}>RR: {runRate}</span>
 
         <span style={styles.ovr}>
-          Ovr: {completedOvers}.{currentBalls}
+          Ovr: {displayOver}.{overs.length % 6}
         </span>
       </div>
     </div>
