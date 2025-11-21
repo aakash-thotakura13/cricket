@@ -5,23 +5,20 @@ import wicketsCounter from "../function/wicketsCounter";
 export const ScoreBar = ({ team, allOvers, activeOver }) => {
 
   const overs = allOvers?.flatMap(over => over.overRuns) || [];
+  
+  const totalRuns = addRuns(overs);
+  const wickets = wicketsCounter(overs);
+  
+  // Correct run rate
+  const totalBalls = overs.length;
+  const completedOvers = Math.floor(overs.length / 6) || 0
   const currentBalls = activeOver?.length || 0;
 
-  const totalRuns = addRuns([...overs, ...activeOver]);
-  const wickets = wicketsCounter([...overs, ...activeOver]);
-
-  const completedOvers = allOvers?.length || 0;
-  const displayOver = Math.floor(overs.length / 6) || 0
-
-  // Correct run rate
-  const totalBalls = completedOvers * 6 + currentBalls;
   const oversDecimal = totalBalls / 6;
   const runRate =
-    oversDecimal > 0 ? (totalRuns / oversDecimal).toFixed(2) : "0.00";
+    oversDecimal > 0 ? (totalRuns / Number(`${completedOvers}.${currentBalls}`)).toFixed(2) : "0.00";
 
-  // -------------------------
   // 🔥 RUN ANIMATION LOGIC
-  // -------------------------
   const [animatedRuns, setAnimatedRuns] = useState(totalRuns);
 
   useEffect(() => {
@@ -62,7 +59,7 @@ export const ScoreBar = ({ team, allOvers, activeOver }) => {
         <span style={styles.rr}>RR: {runRate}</span>
 
         <span style={styles.ovr}>
-          Ovr: {displayOver}.{overs.length % 6}
+          Ovr: {completedOvers}.{currentBalls}
         </span>
       </div>
     </div>
