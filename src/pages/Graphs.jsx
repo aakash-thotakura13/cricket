@@ -30,7 +30,7 @@ export const Graphs = () => {
         dataKeyTwo="twoRun"
         xAxisKey="over"
         yAxisKey="runs"
-        title="Runs per Over Comparison"
+        title="Runs Vs Over"
         colorOne="green"
         colorTwo="orange"
       />
@@ -41,7 +41,7 @@ export const Graphs = () => {
         dataKeyTwo="twoTotalRuns"
         xAxisKey="over"
         yAxisKey="runs"
-        title="Runs per Over Comparison"
+        title="Total Runs"
         colorOne="green"
         colorTwo="orange"
       />
@@ -52,7 +52,7 @@ export const Graphs = () => {
         dataKeyTwo="twoRunRate"
         xAxisKey="over"
         yAxisKey="runs"
-        title="Runs per Over Comparison"
+        title="RunsRate Vs Over"
         colorOne="green"
         colorTwo="orange"
       />
