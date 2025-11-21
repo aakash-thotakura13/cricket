@@ -95,9 +95,25 @@ export const Pitch = ({
 
   useEffect(() => {
     if (allOvers.length === 20) {
+      alert("Match Over", allOvers.length);
       inningUp();
     }
   }, [allOvers]);
+
+
+  useEffect(() => {
+    const totalWickets = computeWicket(battingCard);
+    
+    if (totalWickets === 2) {
+      alert("Match Over", totalWickets);
+      inningUp();
+    }
+  }, [battingCard])
+
+
+  function computeWicket(battingCard) {
+    return battingCard.filter(player => player.status === "OUT").length
+  }
 
 
   function updateAllOversPerBall(run) {
