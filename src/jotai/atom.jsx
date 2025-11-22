@@ -35,9 +35,8 @@ export const inningsTwoAllOvers = atom([]);
 
 export const inningsOneScore = atom(
   (get) => {
-    const _inningsOneAllOvers = get(inningsOneAllOvers).map(over =>over.overRuns).flat();
-    const _overRuns = get(overRuns);
-    return [..._inningsOneAllOvers, ..._overRuns];
+    const _inningsOneAllOvers = get(inningsOneAllOvers).map(over => over.overRuns).flat();
+    return [..._inningsOneAllOvers];
   },
   (get, set, overs) => {
     // optional write logic
@@ -46,9 +45,8 @@ export const inningsOneScore = atom(
 
 export const inningsTwoScore = atom(
   (get) => {
-    const _inningsTwoAllOvers = get(inningsTwoAllOvers).map(over =>over.overRuns).flat();
-    const _overRuns = get(overRuns);
-    return [..._inningsTwoAllOvers, ..._overRuns];
+    const _inningsTwoAllOvers = get(inningsTwoAllOvers).map(over => over.overRuns).flat();
+    return [..._inningsTwoAllOvers];
   },
   (get, set, overs) => {
     // optional write logic
